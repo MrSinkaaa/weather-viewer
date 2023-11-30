@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@WebServlet("/index/*")
+@WebServlet("/")
 public class CentralServlet extends HttpServlet {
 
     private final List<ServletPlugin> plugins = new ArrayList<>();

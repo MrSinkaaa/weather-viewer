@@ -1,8 +1,9 @@
 package ru.mrsinkaaa.servlets.plugins;
 
+import org.thymeleaf.TemplateEngine;
 import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.servlets.ServletPlugin;
-import ru.mrsinkaaa.utils.AppConfig;
+import ru.mrsinkaaa.config.AppConfig;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,11 +16,12 @@ public class IndexPlugin implements ServletPlugin {
 
     @Override
     public boolean canHandle(String path) {
-        return path.startsWith("/index");
+        return path.equals("/");
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String city = request.getParameter("city");
 
         String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
@@ -31,6 +33,7 @@ public class IndexPlugin implements ServletPlugin {
             throw new RuntimeException("Something went wrong", e);
         }
 
+        request.getSession().setAttribute("city", city);
 
     }
 }
