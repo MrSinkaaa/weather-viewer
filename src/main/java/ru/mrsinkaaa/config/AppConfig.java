@@ -1,12 +1,16 @@
-package ru.mrsinkaaa.utils;
+package ru.mrsinkaaa.config;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AppConfig {
 
-    private static Properties properties = new Properties();
+    private static final Properties properties = new Properties();
 
     static {
         try (InputStream inputStream = AppConfig.class.getClassLoader().getResourceAsStream("application.properties")) {
