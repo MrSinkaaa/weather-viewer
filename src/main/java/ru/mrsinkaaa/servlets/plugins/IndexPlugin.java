@@ -1,9 +1,8 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import org.thymeleaf.TemplateEngine;
-import ru.mrsinkaaa.api.WeatherAPI;
+import org.thymeleaf.context.WebContext;
+import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.servlets.ServletPlugin;
-import ru.mrsinkaaa.config.AppConfig;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,28 +11,18 @@ import java.io.IOException;
 
 public class IndexPlugin implements ServletPlugin {
 
-    private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
-
     @Override
     public boolean canHandle(String path) {
-        return path.equals("/");
+        return path.equals("/index");
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
 
-        String city = request.getParameter("city");
+        WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
 
-        String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
-
-        try {
-            String resp = weatherAPI.sendGetRequest(url);
-            response.getWriter().println(resp);
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Something went wrong", e);
-        }
-
-        request.getSession().setAttribute("city", city);
+        ThymeleafConfig.getTemplateEngine().process("index.html", webContext, response.getWriter());
 
     }
 }
