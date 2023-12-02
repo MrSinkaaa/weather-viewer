@@ -13,13 +13,12 @@ public class IndexPlugin implements ServletPlugin {
 
     @Override
     public boolean canHandle(String path) {
-        return path.equals("/index");
+        return path.equals("/");
     }
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
+        response.setContentType("text/html");
         WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
 
         ThymeleafConfig.getTemplateEngine().process("index.html", webContext, response.getWriter());
