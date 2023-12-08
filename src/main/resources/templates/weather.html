@@ -4,39 +4,62 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Weather</title>
+    <title>Weather Viewer</title>
 </head>
 <body>
-<div class="nav d-flex justify-content-between align-items-center bg-secondary">
-    <span th:href="@{../images/logo.svg}"></span>
-    <h2>Weather Viewer</h2>
-<!--    <p th:text="${user.name}"></p>-->
-</div>
-<div class="d-flex justify-content-center align-items-center bg-light">
-    <div class="m-5">
-        <div class="w-100 text-center">
-            <div>City: <p th:text="${weather.city}"></p></div>
-            <div>Country: <p th:text="${weather.country}"></p></div>
+<div class="container-fluid">
+    <nav class="navbar d-flex justify-content-between align-items-center bg-gradient" style="background-color: rgba(153,225,78,0.97)">
+        <div class="d-flex align-items-center ms-4">
+            <img th:src="@{../static/images/logo.svg}" alt="" width="30" height="30"/>
+            <a class="navbar-brand ms-2">Weather Viewer</a>
         </div>
-        <br>
-        <div class="w-100 text-center">
-            <div>
-                <ul class="list-unstyled d-flex flex-column justify-content-around align-items-start">
-                    <li>Longitude: <span th:text="${weather.longitude}"></span></li>
-                    <li>Latitude: <span th:text="${weather.latitude}"></span></li>
-                    <li>Weather: <span th:text="${weather.weatherIcon}"></span></li>
-                    <li>Sunrise: <span th:text="${weather.sunrise}"></span></li>
-                    <li>Sunset: <span th:text="${weather.sunset}"></span></li>
-                    <li>Temp: <span th:text="${weather.temperature}"></span></li>
-                    <li>Humidity: <span th:text="${weather.humidity}"></span></li>
-                    <li>Pressure: <span th:text="${weather.pressure}"></span></li>
-                    <li>Visibility: <span th:text="${weather.visibility}"></span></li>
-                    <li>WindSpeed: <span th:text="${weather.windSpeed}"></span></li>
-                    <li>WindDeg: <span th:text="${weather.windDeg}"></span></li>
-                </ul>
+        <div class="d-flex align-items-center me-4">
+            <form class="d-flex pe-3">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
+            </form>
+            <p class="m-2" th:text="${user.login}"></p>
+            <button class="btn btn-sm btn-outline-primary">logout</button>
+        </div>
+    </nav>
+    <main class="d-flex justify-content-center align-items-center bg-light">
+        <div th:text="${param.city} ? 'has' : 'doesnt has'"></div>
+        <div th:unless="${param.city}">
+            <form action="/weather" method="post">
+                <div>
+                    <label for="city">City</label>
+                    <input type="text" id="city" name="city" class="form-control" placeholder="Enter city">
+                </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+        <div th:if="${param.city}">
+            <div class="m-5">
+                <div class="w-100 text-center">
+                    <div>City: <p th:text="${weather.city}"></p></div>
+                    <div>Country: <p th:text="${weather.country}"></p></div>
+                </div>
+                <br>
+                <div class="w-100 text-center">
+                    <div>
+                        <ul class="list-unstyled d-flex flex-column justify-content-around align-items-start">
+                            <li>Longitude: <span th:text="${weather.longitude}"></span></li>
+                            <li>Latitude: <span th:text="${weather.latitude}"></span></li>
+                            <li>Weather: <span th:text="${weather.weatherIcon}"></span></li>
+                            <li>Sunrise: <span th:text="${weather.sunrise}"></span></li>
+                            <li>Sunset: <span th:text="${weather.sunset}"></span></li>
+                            <li>Temp: <span th:text="${weather.temperature}"></span></li>
+                            <li>Humidity: <span th:text="${weather.humidity}"></span></li>
+                            <li>Pressure: <span th:text="${weather.pressure}"></span></li>
+                            <li>Visibility: <span th:text="${weather.visibility}"></span></li>
+                            <li>WindSpeed: <span th:text="${weather.windSpeed}"></span></li>
+                            <li>WindDeg: <span th:text="${weather.windDeg}"></span></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 </div>
 </body>
 </html>
