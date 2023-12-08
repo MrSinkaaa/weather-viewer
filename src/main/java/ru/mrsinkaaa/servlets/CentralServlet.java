@@ -1,6 +1,7 @@
 package ru.mrsinkaaa.servlets;
 
 import ru.mrsinkaaa.servlets.plugins.IndexPlugin;
+import ru.mrsinkaaa.servlets.plugins.LoginPlugin;
 import ru.mrsinkaaa.servlets.plugins.WeatherPlugin;
 
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ public class CentralServlet extends HttpServlet {
     public void init() {
 
         plugins.add(new IndexPlugin());
+        plugins.add(new LoginPlugin());
         plugins.add(new WeatherPlugin());
     }
 

@@ -31,6 +31,15 @@ public class UserRepository implements CrudRepository<Integer, User> {
         }
     }
 
+    public Optional<User> findByLoginAndPassword(String login, String password) {
+        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+            return Optional.ofNullable(session.createQuery("from User u where u.login = :login and u.password = :password", User.class)
+                   .setParameter("login", login)
+                   .setParameter("password", password)
+                   .getSingleResult());
+        }
+    }
+
     @Override
     public List<User> findAll() {
         try (Session session = HibernateConfig.getSessionFactory().openSession()) {
