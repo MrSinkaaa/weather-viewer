@@ -7,58 +7,74 @@
     <title>Weather Viewer</title>
 </head>
 <body>
-<div class="container-fluid">
-    <nav class="navbar d-flex justify-content-between align-items-center bg-gradient" style="background-color: rgba(153,225,78,0.97)">
-        <div class="d-flex align-items-center ms-4">
-            <img th:src="@{../static/images/logo.svg}" alt="" width="30" height="30"/>
-            <a class="navbar-brand ms-2">Weather Viewer</a>
-        </div>
-        <div class="d-flex align-items-center me-4">
-            <form class="d-flex pe-3">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
-            </form>
-            <p class="m-2" th:text="${user.login}"></p>
-            <button class="btn btn-sm btn-outline-primary">logout</button>
-        </div>
-    </nav>
-    <main class="d-flex justify-content-center align-items-center bg-light">
-        <div th:text="${param.city} ? 'has' : 'doesnt has'"></div>
-        <div th:unless="${param.city}">
+<div class="container">
+    <div class="row justify-content-md-center">
+        <nav class="navbar col-md-12" style="background-color: rgba(153,225,78,0.97)">
+            <div class="ms-4 col-md-5">
+                <img class="mb-1" th:src="@{/images/logo.svg}" alt="" width="30" height="30"/>
+                <a class="navbar-brand m-2">Weather Viewer</a>
+            </div>
+            <div class="col-md-3">
+                <form class="d-flex pe-3">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-sm btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            <div class="col-md-2 d-flex justify-content-end">
+                <p class="m-2" th:text="${user.login}"></p>
+                <button class="btn btn-sm btn-outline-primary">logout</button>
+            </div>
+        </nav>
+    </div>
+    <main class="row">
+        <div th:unless="${param.city}" class="offset-md-5 col-md-2">
             <form action="/weather" method="post">
-                <div>
+                <div class="m-2">
                     <label for="city">City</label>
                     <input type="text" id="city" name="city" class="form-control" placeholder="Enter city">
                 </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary m-2">Submit</button>
             </form>
         </div>
-        <div th:if="${param.city}">
-            <div class="m-5">
-                <div class="w-100 text-center">
-                    <div>City: <p th:text="${weather.city}"></p></div>
-                    <div>Country: <p th:text="${weather.country}"></p></div>
-                </div>
-                <br>
-                <div class="w-100 text-center">
-                    <div>
-                        <ul class="list-unstyled d-flex flex-column justify-content-around align-items-start">
-                            <li>Longitude: <span th:text="${weather.longitude}"></span></li>
-                            <li>Latitude: <span th:text="${weather.latitude}"></span></li>
-                            <li>Weather: <span th:text="${weather.weatherIcon}"></span></li>
-                            <li>Sunrise: <span th:text="${weather.sunrise}"></span></li>
-                            <li>Sunset: <span th:text="${weather.sunset}"></span></li>
-                            <li>Temp: <span th:text="${weather.temperature}"></span></li>
-                            <li>Humidity: <span th:text="${weather.humidity}"></span></li>
-                            <li>Pressure: <span th:text="${weather.pressure}"></span></li>
-                            <li>Visibility: <span th:text="${weather.visibility}"></span></li>
-                            <li>WindSpeed: <span th:text="${weather.windSpeed}"></span></li>
-                            <li>WindDeg: <span th:text="${weather.windDeg}"></span></li>
-                        </ul>
+        <div th:if="${param.city}" class="offset-md-3 col-md-7">
+                <div class="row">
+                    <div class="col-md-8" th:style="'background: url(' + @{/images/cloudy.jpg} + ') no-repeat;'">
+                        <div class="row p-1 m-3 rounded-2">
+                            <div class="fw-bold h4 mb-3 col-md-8">Current weather</div>
+                            <div class="fw-bold h4 col-md-4 mb-3"><span th:text="${weather.city}"></span>
+                                <span th:text="(${weather.country})"></span>
+                            </div>
+                            <div class="h2 col-md-8"><span th:text="${weather.temperature}"></span></div>
+                            <div class="col-md-4">
+                                <div class="fw-bold">Lon: <span th:text="${weather.longitude}"></span></div>
+                                <div class="fw-bold">Lat: <span th:text="${weather.latitude}"></span></div>
+                            </div>
+                            <div class="h3 m-2">Cloudy</div>
+                            <div class="col-md-3">
+                                <div class="fw-bold">Wind: <span th:text="${weather.windSpeed}"></span> km/h</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fw-bold">Humidity: <span th:text="${weather.humidity}"></span>%</div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fw-bold">Visibility: <span th:text="${weather.visibility}"></span></div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="fw-bold">Pressure: <span th:text="${weather.pressure}"></span> mb</div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="weather-header mt-3">Sun (Dec 9)</div>
+                                <div class="col-md-6">
+                                    <div class="fw-bold">Sunrise: <span th:text="${weather.sunrise}"></span></div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="fw-bold">Sunset: <span th:text="${weather.sunset}"></span></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </main>
 </div>
 </body>
