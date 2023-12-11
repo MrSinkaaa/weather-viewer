@@ -1,7 +1,9 @@
 package ru.mrsinkaaa.servlets;
 
+import org.thymeleaf.context.WebContext;
 import ru.mrsinkaaa.servlets.plugins.IndexPlugin;
 import ru.mrsinkaaa.servlets.plugins.LoginPlugin;
+import ru.mrsinkaaa.servlets.plugins.ImagePlugin;
 import ru.mrsinkaaa.servlets.plugins.WeatherPlugin;
 
 import javax.servlet.ServletException;
@@ -18,17 +20,21 @@ public class CentralServlet extends HttpServlet {
 
     private final List<ServletPlugin> plugins = new ArrayList<>();
 
+    public static WebContext webContext;
+
     @Override
     public void init() {
 
         plugins.add(new IndexPlugin());
         plugins.add(new LoginPlugin());
         plugins.add(new WeatherPlugin());
+        plugins.add(new ImagePlugin());
     }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String path = request.getRequestURI();
+        webContext = new WebContext(request, response, getServletContext(), request.getLocale());
 
         try {
             for(ServletPlugin plugin : plugins) {

@@ -19,8 +19,8 @@ public class WeatherDTO {
 
     private String weatherIcon;
 
-    private LocalDateTime sunrise;
-    private LocalDateTime sunset;
+    private String sunrise;
+    private String sunset;
 
     private Double temperature;
     private Double humidity;

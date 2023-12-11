@@ -2,10 +2,10 @@ package ru.mrsinkaaa.servlets.plugins;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.thymeleaf.context.WebContext;
 import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.config.ThymeleafConfig;
+import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 
@@ -17,6 +17,9 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+
+import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 public class WeatherPlugin implements ServletPlugin {
 
@@ -29,8 +32,10 @@ public class WeatherPlugin implements ServletPlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+        webContext.setVariable("user", user);
+
         if (request.getMethod().equals("GET")) {
-            WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
 
             ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
         }
@@ -41,7 +46,6 @@ public class WeatherPlugin implements ServletPlugin {
             try {
                 WeatherDTO weatherDTO = getWeatherDTO(url);
 
-                WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
                 webContext.setVariable("weather", weatherDTO);
 
                 ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
@@ -64,9 +68,9 @@ public class WeatherPlugin implements ServletPlugin {
                 .city(jsonWeather.get("name").asText())
                 .country(jsonWeather.get("sys").get("country").asText())
                 .weatherIcon(jsonWeather.get("weather").get(0).get("icon").asText())
-                .sunrise(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunrise").asText()))
-                .sunset(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunset").asText()))
-                .temperature(Double.valueOf(jsonWeather.get("main").get("temp").asText()))
+                .sunrise(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunrise").asLong()))
+                .sunset(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunset").asLong()))
+                .temperature(convertTempToCelsius(jsonWeather.get("main").get("temp").asDouble()))
                 .humidity(Double.valueOf(jsonWeather.get("main").get("humidity").asText()))
                 .pressure(Double.valueOf(jsonWeather.get("main").get("pressure").asText()))
                 .visibility(Double.valueOf(jsonWeather.get("visibility").asText()))
@@ -75,12 +79,17 @@ public class WeatherPlugin implements ServletPlugin {
                 .build();
     }
 
-    private static LocalDateTime parseUTCtoLocalDateTime(String unixTimestamp) {
-        Instant instant = Instant.ofEpochSecond(Long.parseLong(unixTimestamp));
+    private static Double convertTempToCelsius(Double temp) {
+        return Math.ceil(temp - 273.15);
+    }
+
+    private static String parseUTCtoLocalDateTime(Long unixTimestamp) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
+
+        Instant instant = Instant.ofEpochSecond(unixTimestamp);
 
         // Convert the Instant to LocalDateTime using the system default time zone
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 
-        return localDateTime;
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).format(formatter);
     }
 }

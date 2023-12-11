@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+
 public class LoginPlugin implements ServletPlugin {
 
     private static final UserService userService = UserService.getInstance();
@@ -24,7 +26,6 @@ public class LoginPlugin implements ServletPlugin {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (request.getMethod().equals("GET")) {
-            WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
 
             ThymeleafConfig.getTemplateEngine().process("login.html", webContext, response.getWriter());
         } else {
@@ -43,8 +44,7 @@ public class LoginPlugin implements ServletPlugin {
 
     @SneakyThrows
     private void onLoginSuccess(HttpServletRequest request, HttpServletResponse response, UserDTO user) {
-        WebContext webContext = new WebContext(request, response, request.getServletContext(), request.getLocale());
-        webContext.setVariable("user", user);
+        request.getSession().setAttribute("user", user);
         response.sendRedirect("/weather");
     }
 
