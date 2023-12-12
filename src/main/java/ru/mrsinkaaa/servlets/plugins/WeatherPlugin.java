@@ -8,6 +8,7 @@ import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.servlets.ServletPlugin;
+import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class WeatherPlugin implements ServletPlugin {
 
     @Override
     public boolean canHandle(String path) {
-        return path.startsWith("/weather");
+        return path.startsWith(PathUtil.WEATHER);
     }
 
     @Override
