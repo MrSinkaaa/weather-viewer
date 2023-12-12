@@ -17,7 +17,7 @@
             <a th:href="@{/login}">
                 <button class="btn btn-sm btn-outline-primary me-2">Log In</button>
             </a>
-            <a th:href="@{/register}">
+            <a th:href="@{/registration}">
                 <button class="btn btn-sm btn-outline-primary">Sign Up</button>
             </a>
         </div>
@@ -28,12 +28,11 @@
                 <div class="col-md-8">
                     <div class="card">
                         <div class="card-header">Log In</div>
-                        <div th:if="${#request.getParameter('error') != null}" style="color: red">Email or password is not correct</div>
+                        <div th:if="${#request.getParameter('error') != null}" style="color: red">Login or password is not correct</div>
                         <div class="card-body">
                             <form action="/login" method="post">
                                 <div class="form-group row">
-                                    <label for="login" class="col-md-4 col-form-label text-md-right">E-Mail
-                                        Address</label>
+                                    <label for="login" class="col-md-4 col-form-label text-md-right">Login</label>
                                     <div class="col-md-6">
                                         <input type="text" id="login" class="form-control" name="login"
                                                required autofocus>
