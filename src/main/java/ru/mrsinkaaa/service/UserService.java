@@ -41,6 +41,15 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public void register(String login, String password) {
+        UserDTO userDTO = UserDTO.builder()
+                .login(login)
+                .password(password)
+                .build();
+
+        save(userDTO);
+    }
+
     public Optional<UserDTO> login(String login, String password) {
         return userRepository.findByLoginAndPassword(login, password)
                 .map(user ->
@@ -53,5 +62,4 @@ public class UserService {
     public static UserService getInstance() {
         return INSTANCE;
     }
-
 }
