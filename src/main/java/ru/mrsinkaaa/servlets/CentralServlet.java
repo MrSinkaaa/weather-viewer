@@ -1,11 +1,9 @@
 package ru.mrsinkaaa.servlets;
 
 import org.thymeleaf.context.WebContext;
-import ru.mrsinkaaa.servlets.plugins.IndexPlugin;
-import ru.mrsinkaaa.servlets.plugins.LoginPlugin;
-import ru.mrsinkaaa.servlets.plugins.ImagePlugin;
-import ru.mrsinkaaa.servlets.plugins.WeatherPlugin;
+import ru.mrsinkaaa.servlets.plugins.*;
 
+import javax.servlet.Registration;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,9 +24,13 @@ public class CentralServlet extends HttpServlet {
     public void init() {
 
         plugins.add(new IndexPlugin());
-        plugins.add(new LoginPlugin());
-        plugins.add(new WeatherPlugin());
         plugins.add(new ImagePlugin());
+
+        plugins.add(new LoginPlugin());
+        plugins.add(new RegistrationPlugin());
+        plugins.add(new LogoutPlugin());
+
+        plugins.add(new WeatherPlugin());
     }
 
     @Override
