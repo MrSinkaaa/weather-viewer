@@ -3,6 +3,7 @@ package ru.mrsinkaaa.servlets.plugins;
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.service.ImageService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
+import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -18,7 +19,7 @@ public class ImagePlugin implements ServletPlugin {
 
     @Override
     public boolean canHandle(String path) {
-        return path.startsWith("/images/");
+        return path.startsWith(PathUtil.IMAGES);
     }
 
     @Override
