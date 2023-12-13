@@ -17,8 +17,6 @@ public class ImageService {
     private ImageService() {
     }
 
-
-
     public static ImageService getInstance() {
         return INSTANCE;
     }

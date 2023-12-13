@@ -26,12 +26,21 @@ public class ImagePlugin implements ServletPlugin {
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String imagePath = request.getRequestURI();
 
+        String getTypeImage = imagePath.substring(imagePath.lastIndexOf(".") + 1);
+        if(getTypeImage.equals("svg")) {
+            getImage(response, imagePath, "image/svg+xml");
+        } else {
+            getImage(response, imagePath, "application/octet-stream");
+        }
+
+    }
+
+    private void getImage(HttpServletResponse response, String imagePath, String contentType) {
         imageService.get(imagePath)
                 .ifPresentOrElse(image -> {
-                    response.setContentType("application/octet-stream");
+                    response.setContentType(contentType);
                     writeImage(response, image);
                 }, () -> response.setStatus(HttpServletResponse.SC_NOT_FOUND));
-
     }
 
     @SneakyThrows
