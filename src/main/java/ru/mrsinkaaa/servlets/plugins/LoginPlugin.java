@@ -1,5 +1,6 @@
 package ru.mrsinkaaa.servlets.plugins;
 
+import jakarta.persistence.NoResultException;
 import lombok.SneakyThrows;
 import org.thymeleaf.context.WebContext;
 import ru.mrsinkaaa.config.ThymeleafConfig;
@@ -30,17 +31,19 @@ public class LoginPlugin implements ServletPlugin {
 
             ThymeleafConfig.getTemplateEngine().process("login.html", webContext, response.getWriter());
         } else {
-            userService.login(request.getParameter("login"), request.getParameter("password"))
-                    .ifPresentOrElse(
-                            user -> onLoginSuccess(request, response, user),
-                            () -> onLoginFail(request, response));
+            try {
+                userService.login(request.getParameter("login"), request.getParameter("password"))
+                        .ifPresent(user -> onLoginSuccess(request, response, user));
+            } catch (NoResultException e) {
+                onLoginFail(request, response);
+            }
         }
 
     }
 
     @SneakyThrows
     private void onLoginFail(HttpServletRequest request, HttpServletResponse response) {
-        response.sendRedirect("/login?error&email=" + request.getParameter("login"));
+        response.sendRedirect("/login?error&login=" + request.getParameter("login"));
     }
 
     @SneakyThrows
