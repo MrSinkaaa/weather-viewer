@@ -7,71 +7,58 @@
     <title>Weather Viewer</title>
 </head>
 <body>
-<div class="container">
-    <nav class="navbar d-flex justify-content-between align-items-center bg-warning">
-        <div class="d-flex align-items-center ms-4">
-            <img th:src="@{/images/logo.svg}" alt="" width="30" height="30"/>
-            <a class="navbar-brand ms-2">Weather Viewer</a>
-        </div>
-        <div class="d-flex align-items-center me-4">
-            <a th:href="@{/login}">
-                <button class="btn btn-sm btn-outline-primary me-2">Log In</button>
-            </a>
-            <a th:href="@{/registration}">
-                <button class="btn btn-sm btn-outline-primary">Sign Up</button>
-            </a>
-        </div>
-    </nav>
-    <main class="login-form mt-5">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">Log In</div>
-                        <div th:if="${#request.getParameter('error') != null}" style="color: red">Login or password is not correct</div>
-                        <div class="card-body">
-                            <form action="/login" method="post">
-                                <div class="form-group row">
-                                    <label for="login" class="col-md-4 col-form-label text-md-right">Login</label>
-                                    <div class="col-md-6">
-                                        <input type="text" id="login" class="form-control" name="login"
-                                               required autofocus>
-                                    </div>
+<div th:include="header.html"></div>
+<main class="mt-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header">Log In</div>
+                    <div class="offset-md-3" th:if="${#request.getParameter('error') != null}" style="color: red">Login
+                        or password is not correct
+                    </div>
+                    <div class="card-body">
+                        <form action="/login" method="post">
+                            <div class="form-group row">
+                                <label for="login" class="col-md-4 col-form-label text-md-right">Login</label>
+                                <div class="col-md-3">
+                                    <input type="text" id="login" class="form-control" name="login"
+                                           th:value="${#request.getParameter('login')}" required autofocus>
                                 </div>
+                            </div>
 
-                                <div class="form-group row">
-                                    <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
-                                    <div class="col-md-6">
-                                        <input type="password" id="password" class="form-control" name="password"
-                                               required>
-                                    </div>
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                                <div class="col-md-3">
+                                    <input type="password" id="password" class="form-control" name="password"
+                                           required>
                                 </div>
+                            </div>
 
-                                <div class="form-group row">
-                                    <div class="col-md-6 offset-md-4">
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" name="remember"> Remember Me
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
+                            <div class="form-group row">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Login
-                                    </button>
-                                    <a href="#" class="btn btn-link">
-                                        Forgot Your Password?
-                                    </a>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="remember"> Remember Me
+                                        </label>
+                                    </div>
                                 </div>
-                            </form>
-                        </div>
+                            </div>
+
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary">
+                                    Login
+                                </button>
+                                <a href="#" class="btn btn-link">
+                                    Forgot Your Password?
+                                </a>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
-</div>
+    </div>
+</main>
 </body>
 </html>
