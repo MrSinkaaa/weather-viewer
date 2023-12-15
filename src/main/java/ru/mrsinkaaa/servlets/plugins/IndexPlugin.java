@@ -21,7 +21,7 @@ public class IndexPlugin implements ServletPlugin {
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-        ThymeleafConfig.getTemplateEngine().process("index.html", webContext, response.getWriter());
+        ThymeleafConfig.getTemplateEngine().process("header.html", webContext, response.getWriter());
 
     }
 }

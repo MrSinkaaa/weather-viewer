@@ -6,7 +6,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public interface ServletPlugin {
-
     boolean canHandle(String path);
     void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException;
 }
