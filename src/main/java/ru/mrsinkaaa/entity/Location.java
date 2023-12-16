@@ -20,6 +20,7 @@ public class Location {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name;
+    @Column(name = "user_id")
     private int userId;
     private BigDecimal latitude;
     private BigDecimal longitude;
