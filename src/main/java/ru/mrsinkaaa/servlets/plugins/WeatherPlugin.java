@@ -7,6 +7,7 @@ import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
+import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
@@ -25,6 +26,7 @@ import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 public class WeatherPlugin implements ServletPlugin {
 
     private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
+    private final SessionService sessionService = SessionService.getInstance();
 
     @Override
     public boolean canHandle(String path) {
@@ -33,26 +35,28 @@ public class WeatherPlugin implements ServletPlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UserDTO user = (UserDTO) request.getSession().getAttribute("user");
-        webContext.setVariable("user", user);
+        if(sessionService.checkIfSessionExists(request)) {
+            UserDTO user = (UserDTO) request.getSession().getAttribute("user");
+            webContext.setVariable("user", user);
 
-        if (request.getMethod().equals("GET")) {
-
-            ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
-        }
-        if (request.getParameter("city") != null) {
-
-            String city = request.getParameter("city");
-            String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
-            try {
-                WeatherDTO weatherDTO = getWeatherDTO(url);
-
-                webContext.setVariable("weather", weatherDTO);
+            if (request.getMethod().equals("GET")) {
 
                 ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
-            } catch (RuntimeException e) {
-                response.sendRedirect("/weather?error");
-                System.out.println(e.getMessage());
+            }
+            if (request.getParameter("city") != null) {
+
+                String city = request.getParameter("city");
+                String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
+                try {
+                    WeatherDTO weatherDTO = getWeatherDTO(url);
+
+                    webContext.setVariable("weather", weatherDTO);
+
+                    ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
+                } catch (RuntimeException e) {
+                    response.sendRedirect("/weather?error");
+                    System.out.println(e.getMessage());
+                }
             }
         }
     }
