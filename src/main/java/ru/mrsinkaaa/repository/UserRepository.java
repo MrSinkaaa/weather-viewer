@@ -3,6 +3,7 @@ package ru.mrsinkaaa.repository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ru.mrsinkaaa.entity.User;
 import ru.mrsinkaaa.config.HibernateConfig;
@@ -15,16 +16,17 @@ import java.util.Optional;
 public class UserRepository implements CrudRepository<Integer, User> {
 
     private static final UserRepository INSTANCE = new UserRepository();
+    private final SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
 
     @Override
     public Optional<User> findById(Integer id) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try(Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.get(User.class, id));
         }
     }
 
     public Optional<User> findByLogin(String login) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try(Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.createQuery("from User u where u.login = :login", User.class)
                     .setParameter("login", login)
                     .getSingleResult());
@@ -32,7 +34,7 @@ public class UserRepository implements CrudRepository<Integer, User> {
     }
 
     public Optional<User> findByLoginAndPassword(String login, String password) {
-        try(Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try(Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.createQuery("from User u where u.login = :login and u.password = :password", User.class)
                    .setParameter("login", login)
                    .setParameter("password", password)
@@ -42,7 +44,7 @@ public class UserRepository implements CrudRepository<Integer, User> {
 
     @Override
     public List<User> findAll() {
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from User", User.class).getResultList();
         }
     }
@@ -51,7 +53,7 @@ public class UserRepository implements CrudRepository<Integer, User> {
     public void update(User entity) {
         Transaction tx = null;
 
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
             session.merge(entity);
             tx.commit();
@@ -67,7 +69,7 @@ public class UserRepository implements CrudRepository<Integer, User> {
     public User save(User entity) {
         Transaction tx = null;
 
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             tx = session.beginTransaction();
             session.persist(entity);
             tx.commit();
@@ -84,7 +86,7 @@ public class UserRepository implements CrudRepository<Integer, User> {
     public boolean delete(User entity) {
         Transaction tx = null;
 
-        try (Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (Session session = sessionFactory.openSession()) {
 
             tx = session.beginTransaction();
             session.remove(entity);

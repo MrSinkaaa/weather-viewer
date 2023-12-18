@@ -2,6 +2,7 @@ package ru.mrsinkaaa.repository;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ru.mrsinkaaa.config.HibernateConfig;
 import ru.mrsinkaaa.entity.Session;
@@ -13,17 +14,18 @@ import java.util.Optional;
 public class SessionRepository implements CrudRepository<String, Session> {
 
     private static final SessionRepository INSTANCE = new SessionRepository();
+    private final SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
 
     @Override
     public Optional<Session> findById(String id) {
-        try (org.hibernate.Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (org.hibernate.Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.get(Session.class, id));
         }
     }
 
     @Override
     public List<Session> findAll() {
-        try (org.hibernate.Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (org.hibernate.Session session = sessionFactory.openSession()) {
             return session.createQuery("from Session", Session.class).getResultList();
         }
     }
@@ -32,7 +34,7 @@ public class SessionRepository implements CrudRepository<String, Session> {
     public void update(Session entity) {
         Transaction tx = null;
 
-        try (org.hibernate.Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (org.hibernate.Session session = sessionFactory.openSession()) {
 
             tx = session.beginTransaction();
             session.merge(entity);
@@ -50,7 +52,7 @@ public class SessionRepository implements CrudRepository<String, Session> {
     public Session save(Session entity) {
         Transaction tx = null;
 
-        try (org.hibernate.Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (org.hibernate.Session session = sessionFactory.openSession()) {
 
             tx = session.beginTransaction();
             session.persist(entity);
@@ -69,7 +71,7 @@ public class SessionRepository implements CrudRepository<String, Session> {
     public boolean delete(Session entity) {
         Transaction tx = null;
 
-        try (org.hibernate.Session session = HibernateConfig.getSessionFactory().openSession()) {
+        try (org.hibernate.Session session = sessionFactory.openSession()) {
 
             tx = session.beginTransaction();
             session.remove(entity);

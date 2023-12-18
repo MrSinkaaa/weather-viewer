@@ -3,6 +3,7 @@ package ru.mrsinkaaa.service;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.modelmapper.ModelMapper;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
@@ -21,6 +22,7 @@ public class SessionService {
 
     private static final SessionService INSTANCE = new SessionService();
     private final SessionRepository sessionRepository = SessionRepository.getInstance();
+    private final ModelMapper mapper = new ModelMapper();
 
     public UUID createSession(UserDTO userDTO) {
         long expiresAt = Long.parseLong(AppConfig.getProperty("session.expiresAt"));
@@ -51,17 +53,17 @@ public class SessionService {
     public SessionDTO getSession(UUID id) {
         Optional<Session> session = sessionRepository.findById(id.toString());
 
-        return session.map(session1 -> SessionDTO.builder()
-                .id(session1.getId())
-                .userId(session1.getUserId())
-                .expiresAt(session1.getExpiresAt())
-                .build())
+        return session.map(this::toSessionDTO)
                 .orElse(null);
     }
 
     public void deleteSession(UUID id) {
         Optional<Session> session = sessionRepository.findById(id.toString());
-        session.ifPresent(value -> sessionRepository.delete(value));
+        session.ifPresent(sessionRepository::delete);
+    }
+
+    private SessionDTO toSessionDTO(Session session) {
+        return mapper.map(session, SessionDTO.class);
     }
 
     public static SessionService getInstance() {
