@@ -1,0 +1,76 @@
+.weather-body {
+    background-color: #161616;
+    width: 100vw;
+    height: 100vh;
+}
+
+.weather-input {
+    width: 792px;
+    height: 48px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-radius: 24px;
+    background-color: #323232;
+    color: #bfbfbf;
+    font-size: 14px;
+    font-family: "Source Code Pro", cursive;
+    line-height: 19px;
+    outline: none;
+}
+
+.weather-city {
+    color: #fff;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 46px;
+    font-family: "Source Code Pro", cursive;
+}
+
+.weather-temperature {
+    color: #fff;
+    font-size: 64px;
+    font-weight: 600;
+    font-family: "Source Code Pro", cursive;
+    line-height: 72px;
+}
+
+.weather-card {
+    width: 792px;
+    height: 270px;
+    background-color: #323232;
+    border-radius: 24px;
+}
+
+.weather-card-header {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+    font-family: "Source Code Pro", cursive;
+}
+
+.weather-card-body {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.weather-card-item {
+    width: 250px;
+    height: 60px;
+    margin-top: 30px;
+}
+
+.weather-icon {
+    color: #fff;
+    font-size: 24px;
+}
+
+.weather-icon-text {
+    color: #fff;
+    font-size: 32px;
+    font-family: "Source Code Pro", cursive;
+    font-weight: 600;
+    line-height: 38px;
+    padding-left: 30px;
+}

@@ -1,0 +1,43 @@
+.header {
+    background-color: #323232;
+    height: 50px;
+}
+
+.header-brand {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 26px;
+    font-family: "Source Code Pro", cursive;
+}
+
+a {
+    text-decoration: none;
+}
+
+.header-user {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    line-height: 26px;
+    font-family: "Source Code Pro", cursive;
+}
+
+.header .button {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100px;
+    height: 32px;
+    border-radius: 24px;
+    background-color: #f73939;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Source Code Pro", cursive;
+    line-height: 22px;
+    outline: none;
+}
+
+.animated-button:hover {
+    transform: scale(1.2);
+}
