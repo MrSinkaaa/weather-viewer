@@ -62,50 +62,66 @@
 
 <main class="container-fluid weather-body">
     <div class="row">
-        <div class="offset-1 col-10">
-            <div>
+        <div class="offset-1 col-4">
+            <div class="mt-2">
                 <label>
                     <input class="weather-input" type="search" placeholder="Search for a location"/>
                 </label>
             </div>
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between weather-info">
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
                     <h2 class="weather-city">Moscow</h2>
                     <h3 class="weather-temperature pb-4">20°C</h3>
                 </div>
-                <img src="../images/sun.svg" alt="" width="240px" height="240px"/>
+                <img src="../images/snow.svg" alt="" width="240px" height="240px"/>
             </div>
             <div class="weather-card">
                 <h4 class="weather-card-header p-3">Air Quality</h4>
                 <div class="weather-card-body ps-5">
                     <div class="weather-card-item">
                         <span class="weather-icon">
-                            <img src="../images/thermometer.svg" alt="" width="24px" height="24px"/>
+                            <img src="../images/thermometer-celsius.svg" alt="" width="36px" height="36px"/>
                             Real feel
                         </span>
                         <div class="weather-icon-text">30°C</div>
                     </div>
                     <div class="weather-card-item">
                         <span class="weather-icon">
-                            <img src="../images/wind.svg" alt="" width="24px" height="24px"/>
+                            <img src="../images/wind.svg" alt="" width="36px" height="36px"/>
                             Wind
                         </span>
                         <div class="weather-icon-text">0.2 km/h</div>
                     </div>
                     <div class="weather-card-item">
                         <span class="weather-icon">
-                            <img src="../images/uv-index.svg" alt="" width="24px" height="24px"/>
+                            <img src="../images/uv-index.svg" alt="" width="36px" height="36px"/>
                             UV Index
                         </span>
                         <div class="weather-icon-text">3</div>
                     </div>
                     <div class="weather-card-item">
                         <span class="weather-icon">
-                            <img src="../images/thermometer.svg" alt="" width="24px" height="24px"/>
-                            Real feel
+                            <img src="../images/barometer.svg" alt="" width="36px" height="36px"/>
+                            Pressure
                         </span>
-                        <div class="weather-icon-text">30°C</div>
+                        <div class="weather-icon-text">1011 </div>
                     </div>
+                </div>
+            </div>
+            <div class="weather-card mt-3">
+                <h4 class="weather-card-header p-3">Sun & Moon</h4>
+                <div class="weather-card-body">
+                    <div class="sun-times">
+                        <div class="sun-path">
+                            <div class="sun-animation"></div>
+                        </div>
+                        <div class="sun-symbol-path"><span class="symbol">☀</span></div>
+                    </div>
+                    <div class="legend">
+                        <div class="sunrise">5:30 AM</div>
+                        <div class="sunset">8:04 PM</div>
+                    </div>
+                    <div class="clear">&nbsp;</div>
                 </div>
             </div>
         </div>

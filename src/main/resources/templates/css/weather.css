@@ -18,6 +18,10 @@
     outline: none;
 }
 
+.weather-info {
+    width: 792px;
+}
+
 .weather-city {
     color: #fff;
     font-size: 40px;
@@ -43,7 +47,7 @@
 
 .weather-card-header {
     color: #fff;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 600;
     line-height: 20px;
     font-family: "Source Code Pro", cursive;
@@ -63,14 +67,63 @@
 
 .weather-icon {
     color: #fff;
-    font-size: 24px;
+    font-size: 20px;
 }
 
 .weather-icon-text {
     color: #fff;
-    font-size: 32px;
+    font-size: 26px;
     font-family: "Source Code Pro", cursive;
     font-weight: 600;
     line-height: 38px;
-    padding-left: 30px;
+    padding-left: 40px;
+}
+
+.sun-times {
+    margin-top: 40px;
+    width: 230px;
+    height: 60px;
+    border-bottom: 1px solid #999;
+    overflow-y: hidden;
+}
+
+.sun-path {
+    margin-left: 25px;
+    width: 170px;
+    height: 170px;
+    overflow: hidden;
+    border: 1px dashed #999;
+    border-radius: 50%;
+}
+
+.sun-animation {
+    width: 30%;
+    height: 150px;
+    background: rgba(255, 255, 0, 0.4);
+    -webkit-transition: width 2s ease-out;
+    transition: width 2s ease-out;
+}
+
+.sun-symbol-path {
+    position: absolute;
+    left: calc((170px / 2) + 25px);
+    bottom: -5px;
+    height: calc(170px / 2);
+
+    color: yellow;
+    text-shadow: 0 0 5px black;
+
+// Root the rotation at the bottom of an invisible column
+-webkit-transition: -webkit-transform 2s ease-out;
+    -webkit-transform-origin: 50% 100%;
+
+// Set our initial rotation to point not upwards, but towards
+// the bottom-left of the widget.
+-webkit-transform: rotateZ(-73deg);
+
+    .symbol {
+        position: relative;
+        font-size: 16px;
+        top: -8px;
+    }
 }
