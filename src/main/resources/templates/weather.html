@@ -62,7 +62,7 @@
 
 <main class="container-fluid weather-body">
     <div class="row">
-        <div class="offset-1 col-4">
+        <div class="offset-2 col-4">
             <div class="mt-2">
                 <label>
                     <input class="weather-input" type="search" placeholder="Search for a location"/>
@@ -70,7 +70,9 @@
             </div>
             <div class="d-flex justify-content-between weather-info">
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
-                    <h2 class="weather-city">Moscow</h2>
+                    <h2 class="weather-city">Moscow
+                        <div class="d-flex justify-content-center align-items-center button-add animated-button">Add</div>
+                    </h2>
                     <h3 class="weather-temperature pb-4">20°C</h3>
                 </div>
                 <img src="../images/snow.svg" alt="" width="240px" height="240px"/>
@@ -104,7 +106,7 @@
                             <img src="../images/barometer.svg" alt="" width="36px" height="36px"/>
                             Pressure
                         </span>
-                        <div class="weather-icon-text">1011 </div>
+                        <div class="weather-icon-text">1011 mb</div>
                     </div>
                 </div>
             </div>
@@ -115,13 +117,50 @@
                         <div class="sun-path">
                             <div class="sun-animation"></div>
                         </div>
-                        <div class="sun-symbol-path"><span class="symbol">☀</span></div>
+<!--                        <div class="sun-symbol-path"><span class="symbol">☀</span></div>-->
                     </div>
                     <div class="legend">
                         <div class="sunrise">5:30 AM</div>
                         <div class="sunset">8:04 PM</div>
                     </div>
                     <div class="clear">&nbsp;</div>
+                </div>
+            </div>
+        </div>
+        <div class="offset-2 col-3">
+            <div class="searched">
+                <h4 class="weather-card-header p-3">Recently searched</h4>
+                <div class="searched-card">
+                    <h3>Moscow</h3>
+                    <div class="searched-icon-text">
+                        <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
+                        <div>Snow</div>
+                    </div>
+                    <div class="searched-icon-temp">20°C</div>
+                </div>
+                <div class="searched-card">
+                    <h3>Moscow</h3>
+                    <div class="searched-icon-text">
+                        <img src="../images/clear-day.svg" alt="" width="80px" height="80px"/>
+                        <div>Sunny</div>
+                    </div>
+                    <div class="searched-icon-temp">20°C</div>
+                </div>
+                <div class="searched-card">
+                    <h3>Moscow</h3>
+                    <div class="searched-icon-text">
+                        <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
+                        <div>Snow</div>
+                    </div>
+                    <div class="searched-icon-temp">20°C</div>
+                </div>
+                <div class="searched-card">
+                    <h3>Moscow</h3>
+                    <div class="searched-icon-text">
+                        <img src="../images/cloudy.svg" alt="" width="80px" height="80px"/>
+                        <div>Cloudly</div>
+                    </div>
+                    <div class="searched-icon-temp">20°C</div>
                 </div>
             </div>
         </div>

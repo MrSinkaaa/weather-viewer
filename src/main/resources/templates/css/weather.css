@@ -61,8 +61,8 @@
 
 .weather-card-item {
     width: 250px;
-    height: 60px;
-    margin-top: 30px;
+    height: 65px;
+    margin-top: 25px;
 }
 
 .weather-icon {
@@ -97,7 +97,7 @@
 }
 
 .sun-animation {
-    width: 30%;
+    width: 50%;
     height: 150px;
     background: rgba(255, 255, 0, 0.4);
     -webkit-transition: width 2s ease-out;
@@ -113,17 +113,82 @@
     color: yellow;
     text-shadow: 0 0 5px black;
 
-// Root the rotation at the bottom of an invisible column
--webkit-transition: -webkit-transform 2s ease-out;
+/ / Root the rotation at the bottom of an invisible column -webkit-transition: -webkit-transform 2 s ease-out;
     -webkit-transform-origin: 50% 100%;
 
-// Set our initial rotation to point not upwards, but towards
-// the bottom-left of the widget.
--webkit-transform: rotateZ(-73deg);
+/ / Set our initial rotation to point not upwards, but towards / / the bottom-left of the widget . -webkit-transform: rotateZ(- 73 deg);
 
     .symbol {
         position: relative;
         font-size: 16px;
         top: -8px;
     }
+}
+
+.searched {
+    width: 442px;
+    height: 780px;
+    background-color: #323232;
+    border-radius: 24px;
+    margin-top: 75px;
+    color: #fff;
+    font-family: "Source Code Pro", cursive;
+    font-weight: 600;
+    line-height: 38px;
+}
+
+.searched-card {
+    width: 85%;
+    margin: 0 auto;
+    border-bottom: #626262 1px solid;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.searched-icon-text {
+    display: flex;
+    align-items: center;
+}
+
+.searched-icon-temp {
+    color: #fff;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 38px;
+    padding-left: 40px;
+}
+
+.button-add {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100px;
+    height: 32px;
+    border-radius: 24px;
+    background-color: #f73939;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Source Code Pro", cursive;
+    line-height: 22px;
+    outline: none;
+}
+
+.button-added {
+    cursor: pointer;
+    box-sizing: border-box;
+    width: 100px;
+    height: 32px;
+    border-radius: 24px;
+    background-color: #6b6b6b;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: "Source Code Pro", cursive;
+    line-height: 22px;
+    outline: none;
+}
+
+.animated-button:hover {
+    transform: scale(1.2);
 }
