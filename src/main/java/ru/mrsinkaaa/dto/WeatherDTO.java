@@ -15,18 +15,16 @@ public class WeatherDTO {
     private BigDecimal latitude;
 
     private String city;
-    private String country;
 
-    private String weatherIcon;
+    private Double temperature;
+    private Double feelsLike;
+    private Double pressure;
+    private Double humidity;
+    private Double windSpeed;
+
+    private WeatherCode weatherCode;
 
     private String sunrise;
     private String sunset;
 
-    private Double temperature;
-    private Double humidity;
-    private Double pressure;
-    private Double visibility;
-
-    private Double windSpeed;
-    private Double windDeg;
 }

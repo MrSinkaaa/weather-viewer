@@ -6,6 +6,7 @@ import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.dto.UserDTO;
+import ru.mrsinkaaa.dto.WeatherCode;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
@@ -71,17 +72,19 @@ public class WeatherPlugin implements ServletPlugin {
                 .longitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lon").asDouble()))
                 .latitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lat").asDouble()))
                 .city(jsonWeather.get("name").asText())
-                .country(jsonWeather.get("sys").get("country").asText())
-                .weatherIcon(jsonWeather.get("weather").get(0).get("icon").asText())
+                .weatherCode(getIcon(jsonWeather.get("weather").get(0).get("main").asText()))
                 .sunrise(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunrise").asLong()))
                 .sunset(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunset").asLong()))
                 .temperature(convertTempToCelsius(jsonWeather.get("main").get("temp").asDouble()))
+                .feelsLike(convertTempToCelsius(jsonWeather.get("main").get("feels_like").asDouble()))
                 .humidity(Double.valueOf(jsonWeather.get("main").get("humidity").asText()))
                 .pressure(Double.valueOf(jsonWeather.get("main").get("pressure").asText()))
-                .visibility(Double.valueOf(jsonWeather.get("visibility").asText()))
                 .windSpeed(Double.valueOf(jsonWeather.get("wind").get("speed").asText()))
-                .windDeg(Double.valueOf(jsonWeather.get("wind").get("deg").asText()))
                 .build();
+    }
+
+    private static WeatherCode getIcon(String value) {
+        return WeatherCode.valueOf(value.toUpperCase());
     }
 
     private static Double convertTempToCelsius(Double temp) {
