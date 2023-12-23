@@ -10,5 +10,6 @@ public class PathUtil {
     public static final String REGISTRATION = "/registration";
     public static final String WEATHER = "/weather";
     public static final String IMAGES = "/images";
+    public static final String STYLES = "/styles";
 
 }
