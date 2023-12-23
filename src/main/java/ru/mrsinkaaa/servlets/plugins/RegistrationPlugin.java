@@ -29,7 +29,7 @@ public class RegistrationPlugin implements ServletPlugin {
             response.sendRedirect("/weather");
         } else {
             if(request.getMethod().equals("GET")) {
-                ThymeleafConfig.getTemplateEngine().process("registration.html", webContext, response.getWriter());
+                ThymeleafConfig.getTemplateEngine().process("authorization.html", webContext, response.getWriter());
             } else {
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");

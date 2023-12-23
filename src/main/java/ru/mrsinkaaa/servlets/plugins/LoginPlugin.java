@@ -36,7 +36,7 @@ public class LoginPlugin implements ServletPlugin {
             response.sendRedirect("/weather");
         } else {
             if (request.getMethod().equals("GET")) {
-                ThymeleafConfig.getTemplateEngine().process("login.html", webContext, response.getWriter());
+                ThymeleafConfig.getTemplateEngine().process("authorization.html", webContext, response.getWriter());
             } else {
                 try {
                     userService.login(request.getParameter("login"), request.getParameter("password"))

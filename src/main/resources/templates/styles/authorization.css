@@ -39,6 +39,7 @@
 }
 
 .auth-button {
+    border: none;
     cursor: pointer;
     box-sizing: border-box;
     width: 120px;
@@ -56,4 +57,10 @@
 
 .animated-button:hover {
     transform: scale(1.2);
+}
+
+.weather-body {
+    background-color: #161616;
+    width: 100vw;
+    height: 100vh;
 }
