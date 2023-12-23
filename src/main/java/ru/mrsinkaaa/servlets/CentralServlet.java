@@ -3,7 +3,6 @@ package ru.mrsinkaaa.servlets;
 import org.thymeleaf.context.WebContext;
 import ru.mrsinkaaa.servlets.plugins.*;
 
-import javax.servlet.Registration;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -25,6 +24,7 @@ public class CentralServlet extends HttpServlet {
 
         plugins.add(new IndexPlugin());
         plugins.add(new ImagePlugin());
+        plugins.add(new StylePlugin());
 
         plugins.add(new LoginPlugin());
         plugins.add(new RegistrationPlugin());
