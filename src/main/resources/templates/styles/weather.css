@@ -160,6 +160,7 @@
 }
 
 .button-add {
+    border: none;
     cursor: pointer;
     box-sizing: border-box;
     width: 100px;
@@ -175,6 +176,7 @@
 }
 
 .button-added {
+    border: none;
     cursor: pointer;
     box-sizing: border-box;
     width: 100px;
