@@ -194,3 +194,8 @@
 .animated-button:hover {
     transform: scale(1.2);
 }
+
+.btn-none {
+    border: none;
+    background: none;
+}

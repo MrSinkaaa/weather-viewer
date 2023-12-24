@@ -72,9 +72,11 @@
             </div>
             <div class="d-flex justify-content-between weather-info">
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
-                    <h2 class="weather-city">
+                    <h2 class="weather-city d-flex justify-content-center align-items-center">
                         <span th:text="${weather.city}"/>
-                        <button class="d-flex justify-content-center align-items-center button-add animated-button">Add</button>
+                        <button class="btn-none">
+                            <img src="../images/add-btn.png" alt="" width="40" height="40"/>
+                        </button>
                     </h2>
                     <h3 class="weather-temperature pb-4">
                         <span th:text="${weather.temperature}"/>
@@ -93,6 +95,7 @@
                         </span>
                         <div class="weather-icon-text">
                             <span th:text="${weather.feelsLike}"></span>
+                            &deg;C
                         </div>
                     </div>
                     <div class="weather-card-item">
@@ -146,22 +149,25 @@
         </div>
         <div class="offset-2 col-3">
             <div class="searched">
-                <h4 class="weather-card-header p-3">Recently searched</h4>
-                <div class="searched-card">
-                    <h3>Moscow</h3>
-                    <div class="searched-icon-text">
-                        <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
-                        <div>Snow</div>
+                <h4 class="weather-card-header p-3">Saved Locations</h4>
+                    <div class="searched-card">
+                        <h3>Moscow</h3>
+                        <div class="searched-icon-text">
+                            <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
+                            <div>Snow</div>
+                        </div>
+                        <div class="searched-icon-temp">20&deg;C</div>
+                        <button class="btn-none">
+                            <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
+                        </button>
                     </div>
-                    <div class="searched-icon-temp">20°C</div>
-                </div>
                 <div class="searched-card">
                     <h3>Moscow</h3>
                     <div class="searched-icon-text">
                         <img src="../images/clear.svg" alt="" width="80px" height="80px"/>
                         <div>Sunny</div>
                     </div>
-                    <div class="searched-icon-temp">20°C</div>
+                    <div class="searched-icon-temp">20&deg;C</div>
                 </div>
                 <div class="searched-card">
                     <h3>Moscow</h3>
@@ -169,7 +175,7 @@
                         <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
                         <div>Snow</div>
                     </div>
-                    <div class="searched-icon-temp">20°C</div>
+                    <div class="searched-icon-temp">20&deg;C</div>
                 </div>
                 <div class="searched-card">
                     <h3>Moscow</h3>
@@ -177,7 +183,7 @@
                         <img src="../images/clouds.svg" alt="" width="80px" height="80px"/>
                         <div>Cloudly</div>
                     </div>
-                    <div class="searched-icon-temp">20°C</div>
+                    <div class="searched-icon-temp">20&deg;C</div>
                 </div>
             </div>
         </div>
