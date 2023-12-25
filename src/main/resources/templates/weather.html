@@ -74,9 +74,11 @@
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
                     <h2 class="weather-city d-flex justify-content-center align-items-center">
                         <span th:text="${weather.city}"/>
-                        <button class="btn-none">
-                            <img src="../images/add-btn.png" alt="" width="40" height="40"/>
-                        </button>
+                        <form th:action="${'/location'}" th:method="post" th:object="${weather}">
+                            <button class="btn-none">
+                                <img src="../images/add-btn.png" alt="" width="40" height="40"/>
+                            </button>
+                        </form>
                     </h2>
                     <h3 class="weather-temperature pb-4">
                         <span th:text="${weather.temperature}"/>
@@ -150,40 +152,24 @@
         <div class="offset-2 col-3">
             <div class="searched">
                 <h4 class="weather-card-header p-3">Saved Locations</h4>
-                    <div class="searched-card">
-                        <h3>Moscow</h3>
-                        <div class="searched-icon-text">
-                            <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
-                            <div>Snow</div>
+                <div th:if="${savedLocations}">
+                    <div th:each="location : ${savedLocations}">
+                        <div class="searched-card">
+                            <h3 th:text="${location.name}"></h3>
+                            <div class="searched-icon-text">
+                                <img th:src="${'../images/' + location.weatherCode.getIcon()}" alt="" width="80px" height="80px"/>
+                            </div>
+                            <div class="searched-icon-temp" th:text="${location.temperature}">&deg;C</div>
+                            <form th:action="@{/location}" th:method="delete">
+                                <button class="btn-none">
+                                    <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
+                                </button>
+                            </form>
                         </div>
-                        <div class="searched-icon-temp">20&deg;C</div>
-                        <button class="btn-none">
-                            <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
-                        </button>
                     </div>
-                <div class="searched-card">
-                    <h3>Moscow</h3>
-                    <div class="searched-icon-text">
-                        <img src="../images/clear.svg" alt="" width="80px" height="80px"/>
-                        <div>Sunny</div>
-                    </div>
-                    <div class="searched-icon-temp">20&deg;C</div>
                 </div>
-                <div class="searched-card">
-                    <h3>Moscow</h3>
-                    <div class="searched-icon-text">
-                        <img src="../images/snow.svg" alt="" width="80px" height="80px"/>
-                        <div>Snow</div>
-                    </div>
-                    <div class="searched-icon-temp">20&deg;C</div>
-                </div>
-                <div class="searched-card">
-                    <h3>Moscow</h3>
-                    <div class="searched-icon-text">
-                        <img src="../images/clouds.svg" alt="" width="80px" height="80px"/>
-                        <div>Cloudly</div>
-                    </div>
-                    <div class="searched-icon-temp">20&deg;C</div>
+                <div th:unless="${savedLocations}">
+                    <h3>Not found saved locations..</h3>
                 </div>
             </div>
         </div>

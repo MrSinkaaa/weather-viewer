@@ -37,24 +37,27 @@ public class SessionService {
         return UUID.fromString(session.getId());
     }
 
-    public boolean checkIfSessionExists(HttpServletRequest request) {
+    public Optional<SessionDTO> getSession(HttpServletRequest request) {
         Cookie cookie = Arrays.stream(request.getCookies())
                 .filter(cookie1 -> cookie1.getName().equals("session"))
                 .findFirst()
                 .orElse(null);
 
-        if (cookie != null) {
-            SessionDTO session = getSession(UUID.fromString(cookie.getValue()));
-            return session != null && session.getExpiresAt().isAfter(LocalDateTime.now());
+        if(cookie != null) {
+            Optional<Session> session = sessionRepository.findById(cookie.getValue());
+
+            if(session.isPresent()) {
+                return getValidSession(session.get());
+            }
         }
-        return false;
+        return Optional.empty();
     }
 
-    public SessionDTO getSession(UUID id) {
-        Optional<Session> session = sessionRepository.findById(id.toString());
-
-        return session.map(this::toSessionDTO)
-                .orElse(null);
+    private Optional<SessionDTO> getValidSession(Session session) {
+        if(session.getExpiresAt().isAfter(LocalDateTime.now())) {
+            return Optional.ofNullable(toSessionDTO(session));
+        }
+        return Optional.empty();
     }
 
     public void deleteSession(UUID id) {
