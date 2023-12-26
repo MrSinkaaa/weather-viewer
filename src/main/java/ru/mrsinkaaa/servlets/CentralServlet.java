@@ -31,6 +31,7 @@ public class CentralServlet extends HttpServlet {
         plugins.add(new LogoutPlugin());
 
         plugins.add(new WeatherPlugin());
+        plugins.add(new LocationPlugin());
     }
 
     @Override
