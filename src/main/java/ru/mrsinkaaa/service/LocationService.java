@@ -8,6 +8,7 @@ import ru.mrsinkaaa.entity.Location;
 import ru.mrsinkaaa.repository.LocationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationService {
@@ -26,6 +27,11 @@ public class LocationService {
         return locationRepository.findByUserId(id).stream()
                 .map(this::toLocationDTO)
                 .toList();
+    }
+
+    public Optional<LocationDTO> findByLocationIdAndUserId(Integer locationId, Integer userId) {
+        return locationRepository.findByLocationIdAndUserId(locationId, userId)
+               .map(this::toLocationDTO);
     }
 
     public List<LocationDTO> findAll() {
@@ -52,7 +58,7 @@ public class LocationService {
         return mapper.map(locationDTO, Location.class);
     }
 
-    public LocationService getInstance() {
+    public static LocationService getInstance() {
         return INSTANCE;
     }
 }

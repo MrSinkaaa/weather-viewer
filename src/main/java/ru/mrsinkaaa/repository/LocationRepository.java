@@ -32,6 +32,15 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
         }
     }
 
+    public Optional<Location> findByLocationIdAndUserId(Integer id, Integer userId) {
+        try(Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.createQuery("from Location l where l.id = :locationId and l.userId = :userId", Location.class)
+                 .setParameter("locationId", id)
+                 .setParameter("userId", userId)
+                 .getSingleResult());
+        }
+    }
+
     @Override
     public List<Location> findAll() {
         try (Session session = sessionFactory.openSession()) {
