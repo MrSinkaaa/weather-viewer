@@ -74,7 +74,10 @@
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
                     <h2 class="weather-city d-flex justify-content-center align-items-center">
                         <span th:text="${weather.city}"/>
-                        <form th:action="${'/location'}" th:method="post" th:object="${weather}">
+                        <form th:action="${'/location'}" th:method="post">
+                            <input type="hidden" name="city" th:value="${weather.city}"/>
+                            <input type="hidden" name="latitude" th:value="${weather.latitude}"/>
+                            <input type="hidden" name="longitude" th:value="${weather.longitude}"/>
                             <button class="btn-none">
                                 <img src="../images/add-btn.png" alt="" width="40" height="40"/>
                             </button>
@@ -155,11 +158,11 @@
                 <div th:if="${savedLocations}">
                     <div th:each="location : ${savedLocations}">
                         <div class="searched-card">
-                            <h3 th:text="${location.name}"></h3>
+                            <h3 th:text="${location.city}"></h3>
                             <div class="searched-icon-text">
                                 <img th:src="${'../images/' + location.weatherCode.getIcon()}" alt="" width="80px" height="80px"/>
                             </div>
-                            <div class="searched-icon-temp" th:text="${location.temperature}">&deg;C</div>
+                            <div class="searched-icon-temp" th:text="${location.temperature} + '&deg;C'"></div>
                             <form th:action="@{/location}" th:method="delete">
                                 <button class="btn-none">
                                     <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
@@ -168,8 +171,8 @@
                         </div>
                     </div>
                 </div>
-                <div th:unless="${savedLocations}">
-                    <h3>Not found saved locations..</h3>
+                <div th:if="${savedLocations == null}">
+                    <h3 style="color: white">Not found saved locations..</h3>
                 </div>
             </div>
         </div>

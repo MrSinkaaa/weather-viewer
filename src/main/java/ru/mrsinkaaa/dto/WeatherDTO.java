@@ -16,8 +16,8 @@ public class WeatherDTO {
 
     private String city;
 
-    private Double temperature;
-    private Double feelsLike;
+    private Integer temperature;
+    private Integer feelsLike;
     private Double pressure;
     private Double humidity;
     private Double windSpeed;
