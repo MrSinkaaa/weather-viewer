@@ -1,33 +1,29 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import ru.mrsinkaaa.api.WeatherAPI;
-import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.config.ThymeleafConfig;
+import ru.mrsinkaaa.dto.LocationDTO;
+import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
-import ru.mrsinkaaa.dto.WeatherCode;
 import ru.mrsinkaaa.dto.WeatherDTO;
+import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.SessionService;
+import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.Optional;
 
 import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 public class WeatherPlugin implements ServletPlugin {
 
-    private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
     private final SessionService sessionService = SessionService.getInstance();
+    private final LocationService locationService = LocationService.getInstance();
+    private final WeatherService weatherService = WeatherService.getInstance();
 
     @Override
     public boolean canHandle(String path) {
@@ -35,26 +31,31 @@ public class WeatherPlugin implements ServletPlugin {
     }
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        if(sessionService.checkIfSessionExists(request)) {
+    public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        Optional<SessionDTO> session = sessionService.getSession(request);
+
+        if(session.isPresent()) {
             UserDTO user = (UserDTO) request.getSession().getAttribute("user");
             webContext.setVariable("user", user);
 
             if (request.getMethod().equals("GET")) {
-
                 ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
             }
             if (request.getParameter("city") != null) {
-
-                String city = request.getParameter("city");
-                String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
                 try {
-                    WeatherDTO weatherDTO = getWeatherDTO(url);
+                    String city = request.getParameter("city");
+                    WeatherDTO weatherDTO = weatherService.getWeather(city);
 
+                    List<WeatherDTO> savedLocations = locationService.findByUserId(user.getId())
+                            .stream().map(location ->
+                                    weatherService.getWeather(location.getName()))
+                            .toList();
+
+                    webContext.setVariable("savedLocations", savedLocations);
                     webContext.setVariable("weather", weatherDTO);
 
                     ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
-                } catch (RuntimeException e) {
+                } catch (RuntimeException | IOException e) {
                     response.sendRedirect("/weather?error");
                     System.out.println(e.getMessage());
                 }
@@ -62,42 +63,6 @@ public class WeatherPlugin implements ServletPlugin {
         }
     }
 
-    private WeatherDTO getWeatherDTO(String url) throws IOException {
-        String resp = weatherAPI.sendGetRequest(url);
 
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonWeather = mapper.readTree(resp);
 
-        return WeatherDTO.builder()
-                .longitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lon").asDouble()))
-                .latitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lat").asDouble()))
-                .city(jsonWeather.get("name").asText())
-                .weatherCode(getIcon(jsonWeather.get("weather").get(0).get("main").asText()))
-                .sunrise(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunrise").asLong()))
-                .sunset(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunset").asLong()))
-                .temperature(convertTempToCelsius(jsonWeather.get("main").get("temp").asDouble()))
-                .feelsLike(convertTempToCelsius(jsonWeather.get("main").get("feels_like").asDouble()))
-                .humidity(Double.valueOf(jsonWeather.get("main").get("humidity").asText()))
-                .pressure(Double.valueOf(jsonWeather.get("main").get("pressure").asText()))
-                .windSpeed(Double.valueOf(jsonWeather.get("wind").get("speed").asText()))
-                .build();
-    }
-
-    private static WeatherCode getIcon(String value) {
-        return WeatherCode.valueOf(value.toUpperCase());
-    }
-
-    private static Double convertTempToCelsius(Double temp) {
-        return Math.ceil(temp - 273.15);
-    }
-
-    private static String parseUTCtoLocalDateTime(Long unixTimestamp) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss dd-MM-yyyy");
-
-        Instant instant = Instant.ofEpochSecond(unixTimestamp);
-
-        // Convert the Instant to LocalDateTime using the system default time zone
-
-        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault()).format(formatter);
-    }
 }
