@@ -2,6 +2,7 @@ package ru.mrsinkaaa.service;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.mindrot.jbcrypt.BCrypt;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
 import ru.mrsinkaaa.repository.UserRepository;
@@ -42,21 +43,28 @@ public class UserService {
     }
 
     public void register(String login, String password) {
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+
         UserDTO userDTO = UserDTO.builder()
                 .login(login)
-                .password(password)
+                .password(hashedPassword)
                 .build();
 
         save(userDTO);
     }
 
     public Optional<UserDTO> login(String login, String password) {
-        return userRepository.findByLoginAndPassword(login, password)
-                .map(user ->
-                        UserDTO.builder()
-                                .id(user.getId())
-                                .login(user.getLogin())
-                                .build());
+        return userRepository.findByLogin(login)
+                .map(user -> {
+                     if (BCrypt.checkpw(password, user.getPassword())) {
+                         return UserDTO.builder()
+                               .id(user.getId())
+                               .login(user.getLogin())
+                               .build();
+                     } else {
+                         return null;
+                     }
+                });
     }
 
     public static UserService getInstance() {
