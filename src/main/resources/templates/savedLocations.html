@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link th:href="@{/styles/weather.css}" rel="stylesheet" type="text/css">
+    <title>Weather Viewer</title>
+    <title>Title</title>
+</head>
+<div class="searched">
+    <h4 class="weather-card-header p-3">Saved Locations</h4>
+    <div th:if="${savedLocations}">
+        <div th:each="location : ${savedLocations}">
+            <div class="searched-card">
+                <h3 th:text="${location.city}"></h3>
+                <div class="searched-icon-text">
+                    <img th:src="${'../images/' + location.weatherCode.getIcon()}" alt="" width="80px" height="80px"/>
+                </div>
+                <div class="searched-icon-temp" th:text="${location.temperature} + '&deg;C'"></div>
+                <form th:action="@{/location}" th:method="post">
+                    <input type="hidden" name="city" th:value="${#request.getParameter('city')}"/>
+                    <input type="hidden" name="deleteLocation" th:value="${location.city}"/>
+                    <button class="btn-none">
+                        <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div th:if="${savedLocations == null}">
+        <div class="searched-card">
+            <h3>Not found saved locations..</h3>
+        </div>
+    </div>
+</div>
+</html>
