@@ -15,10 +15,13 @@
             <div class="card-header auth-header-text"><span th:text="${#request.getRequestURI().equals('/login') ? 'Log In' : 'Sign Up'}"></span></div>
             <div class="card-body d-flex flex-column justify-content-center align-items-center">
                 <img th:src="@{/images/logo.svg}" width="100" height="100" alt/>
+                <div th:if="${#request.getParameter('error')}">
+                    <div class="card-error">Login or password is not corrected</div>
+                </div>
                 <form class="d-flex flex-column justify-content-center"
                       th:action="${#request.getRequestURI().equals('/login') ? '/login' : '/registration'}" method="post">
                     <label class="auth-label" for="login">Login</label>
-                    <input class="auth-input" type="text" id="login" name="login" placeholder="Enter your login" required autofocus>
+                    <input class="auth-input" type="text" id="login" name="login" placeholder="Enter your login" required autofocus th:value="${#request.getParameter('login')}">
                     <label class="auth-label" for="password">Password</label>
                     <input class="auth-input" type="password" id="password" name="password" placeholder="Enter your password" required>
                     <button class="d-flex align-items-center justify-content-center auth-button animated-button" type="submit">Submit</button>
