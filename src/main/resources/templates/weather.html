@@ -9,57 +9,6 @@
 </head>
 <body>
 <div th:include="header.html"></div>
-<!--<main class="row">
-    <div th:unless="${param.city}" class="offset-md-5 col-md-2">
-        <form action="/weather" method="post">
-            <div class="m-2">
-                <label for="city">City</label>
-                <input type="text" id="city" name="city" class="form-control" placeholder="Enter city">
-            </div>
-            <button type="submit" class="btn btn-primary m-2">Submit</button>
-        </form>
-    </div>
-    <div th:if="${param.city}" class="offset-md-3 col-md-7 mt-5 rounded-2">
-        <div class="row">
-            <div class="col-md-8" th:style="'background: url(' + @{/images/cloudy.jpg} + ') no-repeat;'">
-                <div class="row p-1 m-3 rounded-2">
-                    <div class="fw-bold h4 mb-3 col-md-8">Current weather</div>
-                    <div class="fw-bold h4 col-md-4 mb-3"><span th:text="${weather.city}"></span>
-                        <span th:text="(${weather.country})"></span>
-                    </div>
-                    <div class="h2 col-md-8"><span th:text="${weather.temperature}"></span></div>
-                    <div class="col-md-4">
-                        <div class="fw-bold">Lon: <span th:text="${weather.longitude}"></span></div>
-                        <div class="fw-bold">Lat: <span th:text="${weather.latitude}"></span></div>
-                    </div>
-                    <div class="h3 mb-2">Cloudy</div>
-                    <div class="col-md-3">
-                        <div class="fw-bold">Wind: <span th:text="${weather.windSpeed}"></span> km/h</div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="fw-bold">Humidity: <span th:text="${weather.humidity}"></span>%</div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="fw-bold">Visibility: <span th:text="${weather.visibility}"></span></div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="fw-bold">Pressure: <span th:text="${weather.pressure}"></span> mb</div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="weather-header mt-3">Sun (Dec 9)</div>
-                        <div class="col-md-8 offset-md-3">
-                            <div class="fw-bold">Sunrise: <span th:text="${weather.sunrise}"></span></div>
-                        </div>
-                        <div class="col-md-8 offset-md-3">
-                            <div class="fw-bold">Sunset: <span th:text="${weather.sunset}"></span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</main>-->
-
 <main class="container-fluid weather-body">
     <div class="row">
         <div class="offset-2 col-4">
@@ -136,45 +85,35 @@
                 </div>
             </div>
             <div class="weather-card mt-3">
-                <h4 class="weather-card-header p-3">Sun & Moon</h4>
+                <h4 class="weather-card-header p-3">Sunrise & Sunset</h4>
                 <div class="weather-card-body">
-                    <div class="sun-times">
-                        <div class="sun-path">
-                            <div class="sun-animation"></div>
+                    <div>
+                        <div class="weather-card-item">
+                        <span class="weather-icon">
+                            <img src="../images/sunrise.svg" alt="" width="36px" height="36px"/>
+                            Sunrise
+                        </span>
+                            <div class="weather-icon-text">
+                                <span th:text="${weather.sunrise} + ' AM'"></span>
+                            </div>
                         </div>
-<!--                        <div class="sun-symbol-path"><span class="symbol">☀</span></div>-->
                     </div>
-                    <div class="legend">
-                        <div class="sunrise">5:30 AM</div>
-                        <div class="sunset">8:04 PM</div>
+                    <div>
+                        <div class="weather-card-item">
+                        <span class="weather-icon">
+                            <img src="../images/sunset.svg" alt="" width="36px" height="36px"/>
+                            Sunset
+                        </span>
+                            <div class="weather-icon-text">
+                                <span th:text="${weather.sunset} + ' PM'"></span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="clear">&nbsp;</div>
                 </div>
             </div>
         </div>
         <div class="offset-2 col-3">
-            <div class="searched">
-                <h4 class="weather-card-header p-3">Saved Locations</h4>
-                <div th:if="${savedLocations}">
-                    <div th:each="location : ${savedLocations}">
-                        <div class="searched-card">
-                            <h3 th:text="${location.city}"></h3>
-                            <div class="searched-icon-text">
-                                <img th:src="${'../images/' + location.weatherCode.getIcon()}" alt="" width="80px" height="80px"/>
-                            </div>
-                            <div class="searched-icon-temp" th:text="${location.temperature} + '&deg;C'"></div>
-                            <form th:action="@{/location}" th:method="delete">
-                                <button class="btn-none">
-                                    <img src="../images/delete-btn.svg" alt="" width="40px" height="40px"/>
-                                </button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                <div th:if="${savedLocations == null}">
-                    <h3 style="color: white">Not found saved locations..</h3>
-                </div>
-            </div>
+            <div th:include="savedLocations.html"></div>
         </div>
     </div>
 </main>
