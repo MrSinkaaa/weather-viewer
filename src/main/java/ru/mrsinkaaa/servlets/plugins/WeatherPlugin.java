@@ -1,7 +1,6 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import ru.mrsinkaaa.config.ThymeleafConfig;
-import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
@@ -11,6 +10,7 @@ import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -60,6 +60,8 @@ public class WeatherPlugin implements ServletPlugin {
                     System.out.println(e.getMessage());
                 }
             }
+        } else {
+            response.sendRedirect(PathUtil.LOGIN);
         }
     }
 
