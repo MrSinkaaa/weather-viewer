@@ -19,7 +19,7 @@ public class SessionRepository implements CrudRepository<String, Session> {
     @Override
     public Optional<Session> findById(String id) {
         try (org.hibernate.Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.get(Session.class, id));
+            return Optional.ofNullable(session.find(Session.class, id));
         }
     }
 
@@ -40,16 +40,14 @@ public class SessionRepository implements CrudRepository<String, Session> {
             session.merge(entity);
             tx.commit();
 
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error updating session: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error updating session: " + e.getMessage());
         }
     }
 
     @Override
-    public Session save(Session entity) {
+    public void save(Session entity) {
         Transaction tx = null;
 
         try (org.hibernate.Session session = sessionFactory.openSession()) {
@@ -58,17 +56,14 @@ public class SessionRepository implements CrudRepository<String, Session> {
             session.persist(entity);
             tx.commit();
 
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error saving session: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error saving session: " + e.getMessage());
         }
-        return entity;
     }
 
     @Override
-    public boolean delete(Session entity) {
+    public void delete(Session entity) {
         Transaction tx = null;
 
         try (org.hibernate.Session session = sessionFactory.openSession()) {
@@ -77,14 +72,10 @@ public class SessionRepository implements CrudRepository<String, Session> {
             session.remove(entity);
             tx.commit();
 
-            return true;
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error deleting session: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error deleting session: " + e.getMessage());
         }
-        return false;
     }
 
     public static SessionRepository getInstance() {

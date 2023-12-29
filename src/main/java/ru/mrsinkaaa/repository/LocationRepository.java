@@ -1,5 +1,6 @@
 package ru.mrsinkaaa.repository;
 
+import jakarta.persistence.NoResultException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.Session;
@@ -19,25 +20,37 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
 
     @Override
     public Optional<Location> findById(Integer id) {
-        try(Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.get(Location.class, id));
+        try (Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.find(Location.class, id));
         }
     }
 
     public List<Location> findByUserId(Integer id) {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             return session.createQuery("from Location l where l.userId = :id", Location.class)
-                  .setParameter("id", id)
-                  .getResultList();
+                    .setParameter("id", id)
+                    .getResultList();
+        }
+    }
+
+    public Optional<Location> findByLocationName(String name) {
+        try (Session session = sessionFactory.openSession()) {
+            return Optional.ofNullable(session.createQuery("from Location l where l.name = :name", Location.class)
+                    .setParameter("name", name)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 
     public Optional<Location> findByLocationIdAndUserId(Integer id, Integer userId) {
-        try(Session session = sessionFactory.openSession()) {
+        try (Session session = sessionFactory.openSession()) {
             return Optional.ofNullable(session.createQuery("from Location l where l.id = :locationId and l.userId = :userId", Location.class)
-                 .setParameter("locationId", id)
-                 .setParameter("userId", userId)
-                 .getSingleResult());
+                    .setParameter("locationId", id)
+                    .setParameter("userId", userId)
+                    .getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
         }
     }
 
@@ -53,21 +66,21 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
-
             tx = session.beginTransaction();
+
             session.merge(entity);
+            session.flush();
+
             tx.commit();
 
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error updating location: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error updating location: " + e.getMessage());
         }
     }
 
     @Override
-    public Location save(Location entity) {
+    public void save(Location entity) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -76,17 +89,14 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             session.persist(entity);
             tx.commit();
 
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error saving location: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error saving location: " + e.getMessage());
         }
-        return entity;
     }
 
     @Override
-    public boolean delete(Location entity) {
+    public void delete(Location entity) {
         Transaction tx = null;
 
         try (Session session = sessionFactory.openSession()) {
@@ -95,14 +105,11 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             session.remove(entity);
             tx.commit();
 
-            return true;
-        } catch (RuntimeException e) {
-            if(tx!= null && tx.isActive()) {
-                tx.rollback();
-            }
-            System.out.println("Error deleting location: " + e.getMessage());
+        } catch (Exception e) {
+            tx.rollback();
+            throw new RuntimeException("Error deleting location: " + e.getMessage());
         }
-        return false;
+
     }
 
     public static LocationRepository getInstance() {
