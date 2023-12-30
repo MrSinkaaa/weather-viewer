@@ -31,7 +31,6 @@ public class WeatherAPI {
         }
 
         reader.close();
-
         return response.toString();
     }
 
