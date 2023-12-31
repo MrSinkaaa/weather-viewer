@@ -1,8 +1,11 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import ru.mrsinkaaa.dto.*;
+import ru.mrsinkaaa.dto.LocationDTO;
+import ru.mrsinkaaa.dto.SessionDTO;
+import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.SessionService;
+import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
@@ -20,6 +23,7 @@ public class LocationPlugin implements ServletPlugin {
 
     private static final LocationService locationService = LocationService.getInstance();
     private static final SessionService sessionService = SessionService.getInstance();
+    private static final WeatherService weatherService = WeatherService.getInstance();
 
     @Override
     public boolean canHandle(String path) {
@@ -33,21 +37,26 @@ public class LocationPlugin implements ServletPlugin {
         if (session.isPresent()) {
             int userId = session.get().getUserId();
 
-            switch (request.getMethod()) {
-                case "GET" -> getLocationByUser(userId);
-                case "POST" -> saveLocation(request, userId);
-                case "DELETE" -> deleteLocation(request, userId);
+            if(request.getParameter("deleteLocation") != null) {
+                deleteLocation(request, userId);
+            } else {
+                saveLocation(request, userId);
             }
-        }
 
+            request.getRequestDispatcher(PathUtil.WEATHER + "?city=" + request.getParameter("city"))
+                    .forward(request, response);
+        } else {
+            response.sendRedirect(PathUtil.LOGIN);
+        }
     }
 
     private void deleteLocation(HttpServletRequest request, int id) {
-        int locationId = Integer.parseInt(request.getParameter("locationId"));
+        String location = request.getParameter("deleteLocation");
 
-        locationService.findByLocationIdAndUserId(locationId, id)
+        locationService.findByLocationName(location)
                 .ifPresent(locationService::delete);
 
+        getLocationByUser(id);
     }
 
     private void saveLocation(HttpServletRequest request, int id) {
@@ -63,10 +72,14 @@ public class LocationPlugin implements ServletPlugin {
                 .build();
 
         locationService.save(locationDTO);
+        getLocationByUser(id);
     }
 
     private static void getLocationByUser(int id) {
-        List<LocationDTO> savedLocations = locationService.findByUserId(id);
+        List<WeatherDTO> savedLocations = locationService.findByUserId(id)
+                .stream().map(location ->
+                        weatherService.getWeather(location.getName()))
+                .toList();
         webContext.setVariable("savedLocations", savedLocations);
     }
 
