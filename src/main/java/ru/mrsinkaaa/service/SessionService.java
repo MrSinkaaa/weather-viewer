@@ -3,6 +3,7 @@ package ru.mrsinkaaa.service;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.SessionDTO;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionService {
 
@@ -33,6 +35,7 @@ public class SessionService {
                 .expiresAt(LocalDateTime.now().plusMinutes(expiresAt))
                 .build();
 
+        log.debug("Session created for user {}: {}", session.getUserId() ,session.getId());
         sessionRepository.update(session);
         return UUID.fromString(session.getId());
     }
@@ -47,14 +50,18 @@ public class SessionService {
             Optional<Session> session = sessionRepository.findById(cookie.getValue());
 
             if(session.isPresent()) {
+                log.debug("Session found: {}", session.get().getId());
                 return getValidSession(session.get());
             }
         }
+        log.debug("Session or cookie not found");
+
         return Optional.empty();
     }
 
     private Optional<SessionDTO> getValidSession(Session session) {
         if(session.getExpiresAt().isAfter(LocalDateTime.now())) {
+            log.debug("Session valid: {}", session.getExpiresAt());
             return Optional.ofNullable(toSessionDTO(session));
         }
         return Optional.empty();
@@ -63,6 +70,7 @@ public class SessionService {
     public void deleteSession(UUID id) {
         Optional<Session> session = sessionRepository.findById(id.toString());
         session.ifPresent(sessionRepository::delete);
+        log.debug("Session for user {} is deleted {}", session.get().getUserId(), session.get().getId());
     }
 
     private SessionDTO toSessionDTO(Session session) {
