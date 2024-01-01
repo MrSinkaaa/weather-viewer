@@ -2,7 +2,7 @@ package ru.mrsinkaaa.service;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.entity.Location;
@@ -11,7 +11,7 @@ import ru.mrsinkaaa.repository.LocationRepository;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationService {
 
