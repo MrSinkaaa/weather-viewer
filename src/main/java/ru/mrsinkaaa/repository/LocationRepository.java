@@ -3,6 +3,7 @@ package ru.mrsinkaaa.repository;
 import jakarta.persistence.NoResultException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,6 +13,7 @@ import ru.mrsinkaaa.entity.Location;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationRepository implements CrudRepository<Integer, Location> {
 
@@ -75,7 +77,7 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             if (tx != null) {
                 tx.rollback();
             }
-            throw new RuntimeException("Error updating location: " + e.getMessage());
+            log.error("Error updating location: " + e.getMessage());
         }
     }
 
@@ -94,7 +96,7 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
                 tx.rollback();
 
             }
-            throw new RuntimeException("Error saving location: " + e.getMessage());
+            log.error("Error saving location: " + e.getMessage());
         }
     }
 
@@ -112,7 +114,7 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             if (tx != null) {
                 tx.rollback();
             }
-            throw new RuntimeException("Error deleting location: " + e.getMessage());
+            log.error("Error deleting location: " + e.getMessage());
         }
 
     }

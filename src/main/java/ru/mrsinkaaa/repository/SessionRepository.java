@@ -2,6 +2,7 @@ package ru.mrsinkaaa.repository;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ru.mrsinkaaa.config.HibernateConfig;
@@ -10,6 +11,7 @@ import ru.mrsinkaaa.entity.Session;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionRepository implements CrudRepository<String, Session> {
 
@@ -41,8 +43,10 @@ public class SessionRepository implements CrudRepository<String, Session> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
-            throw new RuntimeException("Error updating session: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error updating session: " + e.getMessage());
         }
     }
 
@@ -57,8 +61,10 @@ public class SessionRepository implements CrudRepository<String, Session> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
-            throw new RuntimeException("Error saving session: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error saving session: " + e.getMessage());
         }
     }
 
@@ -73,8 +79,10 @@ public class SessionRepository implements CrudRepository<String, Session> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
-            throw new RuntimeException("Error deleting session: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error deleting session: " + e.getMessage());
         }
     }
 

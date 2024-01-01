@@ -3,6 +3,7 @@ package ru.mrsinkaaa.repository;
 import jakarta.persistence.NoResultException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,6 +13,7 @@ import ru.mrsinkaaa.entity.User;
 import java.util.List;
 import java.util.Optional;
 
+@Log4j2
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 
 public class UserRepository implements CrudRepository<Integer, User> {
@@ -63,8 +65,10 @@ public class UserRepository implements CrudRepository<Integer, User> {
             session.merge(entity);
             tx.commit();
         } catch (Exception e) {
-            tx.rollback();
-            throw new RuntimeException("Error updating user: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error updating user: " + e.getMessage());
         }
     }
 
@@ -77,8 +81,10 @@ public class UserRepository implements CrudRepository<Integer, User> {
             session.persist(entity);
             tx.commit();
         } catch (Exception e) {
-            tx.rollback();
-            throw new RuntimeException("Error saving user: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error saving user: " + e.getMessage());
         }
     }
 
@@ -93,8 +99,10 @@ public class UserRepository implements CrudRepository<Integer, User> {
             tx.commit();
 
         } catch (RuntimeException e) {
-            tx.rollback();
-            throw new RuntimeException("Error deleting user: " + e.getMessage());
+            if (tx != null) {
+                tx.rollback();
+            }
+            log.error("Error deleting user: " + e.getMessage());
         }
     }
 
