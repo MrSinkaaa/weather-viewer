@@ -33,13 +33,11 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
         }
     }
 
-    public Optional<Location> findByLocationName(String name) {
+    public List<Location> findByLocationName(String name) {
         try (Session session = sessionFactory.openSession()) {
-            return Optional.ofNullable(session.createQuery("from Location l where l.name = :name", Location.class)
+            return session.createQuery("from Location l where l.name = :name", Location.class)
                     .setParameter("name", name)
-                    .getSingleResult());
-        } catch (NoResultException e) {
-            return Optional.empty();
+                    .getResultList();
         }
     }
 
@@ -74,7 +72,9 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
+            if (tx != null) {
+                tx.rollback();
+            }
             throw new RuntimeException("Error updating location: " + e.getMessage());
         }
     }
@@ -90,7 +90,10 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
+            if (tx != null) {
+                tx.rollback();
+
+            }
             throw new RuntimeException("Error saving location: " + e.getMessage());
         }
     }
@@ -106,7 +109,9 @@ public class LocationRepository implements CrudRepository<Integer, Location> {
             tx.commit();
 
         } catch (Exception e) {
-            tx.rollback();
+            if (tx != null) {
+                tx.rollback();
+            }
             throw new RuntimeException("Error deleting location: " + e.getMessage());
         }
 

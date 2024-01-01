@@ -53,7 +53,9 @@ public class LocationPlugin implements ServletPlugin {
     private void deleteLocation(HttpServletRequest request, int id) {
         String location = request.getParameter("deleteLocation");
 
-        locationService.findByLocationName(location)
+        locationService.findByLocationName(location).stream()
+                .filter(loc -> loc.getUserId() == id)
+                .findFirst()
                 .ifPresent(locationService::delete);
 
         getLocationByUser(id);

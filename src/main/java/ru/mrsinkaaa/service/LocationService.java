@@ -31,8 +31,11 @@ public class LocationService {
                 .toList();
     }
 
-    public Optional<LocationDTO> findByLocationName(String name) {
-        return locationRepository.findByLocationName(name).map(this::toLocationDTO);
+    public List<LocationDTO> findByLocationName(String name) {
+        return locationRepository.findByLocationName(name)
+                .stream()
+                .map(this::toLocationDTO)
+                .toList();
     }
 
     public Optional<LocationDTO> findByLocationIdAndUserId(Integer locationId, Integer userId) {
@@ -47,13 +50,18 @@ public class LocationService {
     }
 
     public void save(LocationDTO locationDTO) {
-        Location location = toLocation(locationDTO);
+        List<Location> locations = locationRepository.findByLocationName(locationDTO.getName());
 
-        log.info("Location for user {} is saved {}", location.getUserId(), location.getId());
-        try {
+        Optional<Location> savedLocation = locations.stream()
+                .filter(location -> locationDTO.getUserId() == location.getUserId())
+                .findFirst();
+
+        if(savedLocation.isPresent()) {
+            log.error("Location for user {} is already exists {}", savedLocation.get().getUserId(), savedLocation.get().getId());
+        } else {
+            Location location = toLocation(locationDTO);
             locationRepository.save(location);
-        } catch (Exception e) {
-            log.error("Location for user {} is not saved {}", location.getUserId(), location.getId());
+            log.info("Location for user {} is saved {}", location.getUserId(), location.getId());
         }
     }
 
