@@ -1,5 +1,6 @@
 package ru.mrsinkaaa.servlets.plugins;
 
+import lombok.extern.log4j.Log4j2;
 import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
@@ -19,7 +20,12 @@ import java.util.Optional;
 
 import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
+@Log4j2
 public class WeatherPlugin implements ServletPlugin {
+
+    private static final String USER_ATTRIBUTE = "user";
+    private static final String WEATHER_TEMPLATE = "weather.html";
+    private static final String ERROR_REDIRECT = "/weather?error";
 
     private final SessionService sessionService = SessionService.getInstance();
     private final LocationService locationService = LocationService.getInstance();
@@ -35,36 +41,52 @@ public class WeatherPlugin implements ServletPlugin {
         Optional<SessionDTO> session = sessionService.getSession(request);
 
         if(session.isPresent()) {
-            UserDTO user = (UserDTO) request.getSession().getAttribute("user");
-            webContext.setVariable("user", user);
-
-            if (request.getMethod().equals("GET")) {
-                ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
-            }
-            if (request.getParameter("city") != null) {
-                try {
-                    String city = request.getParameter("city");
-                    WeatherDTO weatherDTO = weatherService.getWeather(city);
-
-                    List<WeatherDTO> savedLocations = locationService.findByUserId(user.getId())
-                            .stream().map(location ->
-                                    weatherService.getWeather(location.getName()))
-                            .toList();
-
-                    webContext.setVariable("savedLocations", savedLocations);
-                    webContext.setVariable("weather", weatherDTO);
-
-                    ThymeleafConfig.getTemplateEngine().process("weather.html", webContext, response.getWriter());
-                } catch (RuntimeException | IOException e) {
-                    response.sendRedirect("/weather?error");
-                    System.out.println(e.getMessage());
-                }
-            }
+            handleWeatherRequest(request, response);
         } else {
             response.sendRedirect(PathUtil.LOGIN);
         }
     }
 
+    private void handleWeatherRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        UserDTO user = (UserDTO) request.getSession().getAttribute(USER_ATTRIBUTE);
+        webContext.setVariable(USER_ATTRIBUTE, user);
 
+        if (isGetRequest(request)) {
+            processTemplate(response);
+        }
+        if (request.getParameter("city") != null) {
+            processWeatherRequest(request, response, user);
+        }
+    }
+
+    private void processWeatherRequest(HttpServletRequest request, HttpServletResponse response, UserDTO user) throws IOException {
+        String city = request.getParameter("city");
+        try {
+            WeatherDTO weatherDTO = weatherService.getWeather(city);
+            List<WeatherDTO> savedLocations = getSavedLocations(user);
+
+            webContext.setVariable("savedLocations", savedLocations);
+            webContext.setVariable("weather", weatherDTO);
+            processTemplate(response);
+        } catch (RuntimeException | IOException e) {
+            log.error("Error processing weather request: {}", e.getMessage());
+            response.sendRedirect(ERROR_REDIRECT);
+        }
+    }
+
+    private List<WeatherDTO> getSavedLocations(UserDTO user) {
+        return locationService.findByUserId(user.getId())
+                .stream().map(location ->
+                        weatherService.getWeather(location.getName()))
+                .toList();
+    }
+
+    private static void processTemplate(HttpServletResponse response) throws IOException {
+        ThymeleafConfig.getTemplateEngine().process(WEATHER_TEMPLATE, webContext, response.getWriter());
+    }
+
+    private static boolean isGetRequest(HttpServletRequest request) {
+        return "GET".equalsIgnoreCase(request.getMethod());
+    }
 
 }
