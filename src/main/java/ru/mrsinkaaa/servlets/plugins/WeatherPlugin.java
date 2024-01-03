@@ -1,27 +1,22 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import lombok.extern.log4j.Log4j2;
-import ru.mrsinkaaa.config.ThymeleafConfig;
-import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.WeatherService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 @Log4j2
-public class WeatherPlugin implements ServletPlugin {
+public class WeatherPlugin extends BasePlugin {
 
     private static final String USER_ATTRIBUTE = "user";
     private static final String WEATHER_TEMPLATE = "weather.html";
@@ -38,9 +33,8 @@ public class WeatherPlugin implements ServletPlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        Optional<SessionDTO> session = sessionService.getSession(request);
 
-        if(session.isPresent()) {
+        if (userAlreadyLoggedIn(request)) {
             handleWeatherRequest(request, response);
         } else {
             response.sendRedirect(PathUtil.LOGIN);
@@ -51,12 +45,11 @@ public class WeatherPlugin implements ServletPlugin {
         UserDTO user = (UserDTO) request.getSession().getAttribute(USER_ATTRIBUTE);
         webContext.setVariable(USER_ATTRIBUTE, user);
 
-        if (isGetRequest(request)) {
-            processTemplate(response);
-        }
         if (request.getParameter("city") != null) {
             processWeatherRequest(request, response, user);
         }
+
+        renderPage(response, WEATHER_TEMPLATE);
     }
 
     private void processWeatherRequest(HttpServletRequest request, HttpServletResponse response, UserDTO user) throws IOException {
@@ -67,8 +60,7 @@ public class WeatherPlugin implements ServletPlugin {
 
             webContext.setVariable("savedLocations", savedLocations);
             webContext.setVariable("weather", weatherDTO);
-            processTemplate(response);
-        } catch (RuntimeException | IOException e) {
+        } catch (RuntimeException e) {
             log.error("Error processing weather request: {}", e.getMessage());
             response.sendRedirect(ERROR_REDIRECT);
         }
@@ -79,14 +71,6 @@ public class WeatherPlugin implements ServletPlugin {
                 .stream().map(location ->
                         weatherService.getWeather(location.getName()))
                 .toList();
-    }
-
-    private static void processTemplate(HttpServletResponse response) throws IOException {
-        ThymeleafConfig.getTemplateEngine().process(WEATHER_TEMPLATE, webContext, response.getWriter());
-    }
-
-    private static boolean isGetRequest(HttpServletRequest request) {
-        return "GET".equalsIgnoreCase(request.getMethod());
     }
 
 }

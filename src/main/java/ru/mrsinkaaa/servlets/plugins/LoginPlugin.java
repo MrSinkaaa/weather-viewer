@@ -1,14 +1,11 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import jakarta.persistence.NoResultException;
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.config.AppConfig;
-import ru.mrsinkaaa.config.ThymeleafConfig;
-import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.UserDTO;
+import ru.mrsinkaaa.exceptions.user.UserInputException;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.UserService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
@@ -16,12 +13,13 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.UUID;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+public class LoginPlugin extends BasePlugin {
 
-public class LoginPlugin implements ServletPlugin {
+    private static final String LOGIN_TEMPLATE = "authorization.html";
+    private static final String USER_ATTRIBUTE = "user";
+    private static final String LOGIN_ERROR = "/login?error=";
 
     private static final UserService userService = UserService.getInstance();
     private static final SessionService sessionService = SessionService.getInstance();
@@ -33,27 +31,30 @@ public class LoginPlugin implements ServletPlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Optional<SessionDTO> session = sessionService.getSession(request);
 
-        if(session.isPresent()) {
-            response.sendRedirect("/weather");
+        if(userAlreadyLoggedIn(request)) {
+            response.sendRedirect(PathUtil.WEATHER);
         } else {
-            if (request.getMethod().equals("GET")) {
-                ThymeleafConfig.getTemplateEngine().process("authorization.html", webContext, response.getWriter());
+            if (isGetRequest(request)) {
+                renderPage(response, LOGIN_TEMPLATE);
             } else {
-                try {
-                    userService.login(request.getParameter("login"), request.getParameter("password"))
-                            .ifPresent(user -> onLoginSuccess(request, response, user));
-                } catch (NoResultException e) {
-                    onLoginFail(request, response);
-                }
+                handleLoginRequest(request, response);
             }
         }
     }
 
+    private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            userService.login(request.getParameter("login"), request.getParameter("password"))
+                    .ifPresent(user -> onLoginSuccess(request, response, user));
+        } catch (UserInputException exception) {
+            onLoginFail(response, exception.getErrorMessage().getMessage());
+        }
+    }
+
     @SneakyThrows
-    private void onLoginFail(HttpServletRequest request, HttpServletResponse response) {
-        response.sendRedirect("/login?error&login=" + request.getParameter("login"));
+    private void onLoginFail(HttpServletResponse response, String message) {
+        response.sendRedirect(LOGIN_ERROR + message);
     }
 
     @SneakyThrows
@@ -62,9 +63,9 @@ public class LoginPlugin implements ServletPlugin {
         Cookie cookie = new Cookie("session", session.toString());
         cookie.setMaxAge(Integer.parseInt(AppConfig.getProperty("session.expiresAt")) * 60);
 
-        request.getSession().setAttribute("user", user);
+        request.getSession().setAttribute(USER_ATTRIBUTE, user);
         response.addCookie(cookie);
-        response.sendRedirect("/weather");
+        response.sendRedirect(PathUtil.WEATHER);
     }
 
 }

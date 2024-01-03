@@ -1,24 +1,22 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import ru.mrsinkaaa.config.ThymeleafConfig;
-import ru.mrsinkaaa.dto.SessionDTO;
-import ru.mrsinkaaa.service.SessionService;
+import lombok.extern.log4j.Log4j2;
+import ru.mrsinkaaa.exceptions.user.UserInputException;
 import ru.mrsinkaaa.service.UserService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+@Log4j2
+public class RegistrationPlugin extends BasePlugin {
 
-public class RegistrationPlugin implements ServletPlugin {
+    private static final String REGISTRATION_TEMPLATE = "authorization.html";
+    private static final String REGISTRATION_ERROR = "/registration?error=";
 
     private static final UserService userService = UserService.getInstance();
-    private static final SessionService sessionService = SessionService.getInstance();
 
     @Override
     public boolean canHandle(String path) {
@@ -27,21 +25,30 @@ public class RegistrationPlugin implements ServletPlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Optional<SessionDTO> session = sessionService.getSession(request);
 
-        if(session.isPresent()) {
-            response.sendRedirect("/weather");
+        if(userAlreadyLoggedIn(request)) {
+            response.sendRedirect(PathUtil.WEATHER);
         } else {
-            if(request.getMethod().equals("GET")) {
-                ThymeleafConfig.getTemplateEngine().process("authorization.html", webContext, response.getWriter());
+            if(isGetRequest(request)) {
+                renderPage(response, REGISTRATION_TEMPLATE);
             } else {
-                String login = request.getParameter("login");
-                String password = request.getParameter("password");
-
-                userService.register(login, password);
-                response.sendRedirect(PathUtil.LOGIN);
+                handleRegistrationRequest(request, response);
             }
         }
 
     }
+
+    private void handleRegistrationRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
+        try {
+            userService.register(login, password);
+            response.sendRedirect(PathUtil.LOGIN);
+        } catch (UserInputException exception) {
+            log.warn(exception.getErrorMessage().getMessage());
+            response.sendRedirect(REGISTRATION_ERROR + exception.getErrorMessage().getMessage());
+        }
+    }
+
 }
