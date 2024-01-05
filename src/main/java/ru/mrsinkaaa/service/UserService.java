@@ -3,8 +3,12 @@ package ru.mrsinkaaa.service;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
+import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
+import ru.mrsinkaaa.exceptions.ErrorMessage;
+import ru.mrsinkaaa.exceptions.user.UserInputException;
+import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
 import ru.mrsinkaaa.repository.UserRepository;
 
 import java.util.Optional;
@@ -43,28 +47,39 @@ public class UserService {
     }
 
     public void register(String login, String password) {
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        if (isValidCredentials(login, password)) {
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        UserDTO userDTO = UserDTO.builder()
-                .login(login)
-                .password(hashedPassword)
-                .build();
+            UserDTO userDTO = UserDTO.builder()
+                    .login(login)
+                    .password(hashedPassword)
+                    .build();
 
-        save(userDTO);
+            save(userDTO);
+        }
     }
 
-    public Optional<UserDTO> login(String login, String password) {
+    public UserDTO login(String login, String password) {
         return userRepository.findByLogin(login)
                 .map(user -> {
-                     if (BCrypt.checkpw(password, user.getPassword())) {
-                         return UserDTO.builder()
-                               .id(user.getId())
-                               .login(user.getLogin())
-                               .build();
-                     } else {
-                         return null;
-                     }
-                });
+                    if (BCrypt.checkpw(password, user.getPassword())) {
+                        return UserDTO.builder()
+                                .id(user.getId())
+                                .login(user.getLogin())
+                                .build();
+                    } else {
+                        throw new UserInputException(ErrorMessage.USER_WRONG_CREDENTIALS);
+                    }
+                }).orElseThrow(UserNotFoundException::new);
+    }
+
+    private boolean isValidCredentials(String login, String password) {
+        if (login.length() < Integer.parseInt(AppConfig.getProperty("login.length"))) {
+            throw new UserInputException(ErrorMessage.USER_WRONG_LOGIN);
+        } else if (password.length() < Integer.parseInt(AppConfig.getProperty("password.length"))) {
+            throw new UserInputException(ErrorMessage.USER_WRONG_PASSWORD);
+        }
+        return true;
     }
 
     public static UserService getInstance() {
