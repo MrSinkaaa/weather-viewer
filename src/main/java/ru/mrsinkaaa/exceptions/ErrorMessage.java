@@ -18,11 +18,12 @@ public enum ErrorMessage {
     USER_NOT_AUTHORIZED("User is not authorized", HttpServletResponse.SC_FORBIDDEN),
 
 
-    LOCATION_ALREADY_EXISTS("Location with this name already exists", HttpServletResponse.SC_CONFLICT),
-    LOCATION_NOT_FOUND("Location with this name not found", HttpServletResponse.SC_NOT_FOUND);
+    LOCATION_ALREADY_EXISTS("Location with this name already saved", HttpServletResponse.SC_CONFLICT),
+    LOCATION_NOT_FOUND("Location with this name not found", HttpServletResponse.SC_NOT_FOUND),
+
+    API_CONNECTION_ERROR("API connection error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
+    API_RESPONSE_ERROR("API response error", HttpServletResponse.SC_BAD_REQUEST);
 
     private final String message;
     private final int status;
-
-
 }
