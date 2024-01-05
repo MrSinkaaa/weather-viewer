@@ -10,6 +10,7 @@ import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.WeatherCode;
 import ru.mrsinkaaa.dto.WeatherDTO;
+import ru.mrsinkaaa.exceptions.api.APIResponseException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -25,31 +26,37 @@ public class WeatherService {
     private static final WeatherService INSTANCE = new WeatherService();
     private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
 
+
     @SneakyThrows
     public WeatherDTO getWeather(String city) {
-        String url = AppConfig.getProperty("api.url.city").formatted(city, AppConfig.getProperty("api.key"));
+        String url = AppConfig.getProperty("api.url.city")
+                .formatted(city, AppConfig.getProperty("api.key"));
 
-        String resp = weatherAPI.sendGetRequest(url);
-        log.debug("Response from weatherAPI: {}", resp);
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonWeather = mapper.readTree(resp);
-
-        return parseJsonToDTO(jsonWeather);
+        return processWeatherApiResponse(url);
     }
 
-    public WeatherDTO getWeather(BigDecimal latitude, BigDecimal longitude) throws IOException {
-        String url = AppConfig.getProperty("api.url.location").formatted(latitude, longitude, AppConfig.getProperty("api.key"));
+    @SneakyThrows
+    public WeatherDTO getWeather(BigDecimal latitude, BigDecimal longitude) {
+        String url = AppConfig.getProperty("api.url.location")
+                .formatted(latitude, longitude, AppConfig.getProperty("api.key"));
 
-        String resp = weatherAPI.sendGetRequest(url);
-        log.debug("Response from weatherAPI: {}", resp);
-
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode jsonWeather = mapper.readTree(resp);
-
-        return parseJsonToDTO(jsonWeather);
+        return processWeatherApiResponse(url);
     }
 
+    private WeatherDTO processWeatherApiResponse(String url) throws IOException {
+        try {
+            String resp = weatherAPI.sendGetRequest(url);
+            log.debug("Response from weatherAPI: {}", resp);
+
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode jsonWeather = mapper.readTree(resp);
+
+            return parseJsonToDTO(jsonWeather);
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+            throw new APIResponseException();
+        }
+    }
 
     private static WeatherDTO parseJsonToDTO(JsonNode jsonWeather) {
         int timeZone = jsonWeather.get("timezone").asInt();
