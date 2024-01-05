@@ -2,17 +2,15 @@ package ru.mrsinkaaa.servlets.plugins;
 
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.service.ImageService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class ImagePlugin implements ServletPlugin {
+public class ImagePlugin extends BasePlugin {
 
     private final ImageService imageService = ImageService.getInstance();
 

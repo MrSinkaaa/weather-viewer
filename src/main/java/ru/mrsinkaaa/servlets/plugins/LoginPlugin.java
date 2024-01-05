@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.exceptions.user.UserInputException;
+import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.UserService;
 import ru.mrsinkaaa.utils.PathUtil;
@@ -32,7 +33,7 @@ public class LoginPlugin extends BasePlugin {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if(userAlreadyLoggedIn(request)) {
+        if (userAlreadyLoggedIn(request)) {
             response.sendRedirect(PathUtil.WEATHER);
         } else {
             if (isGetRequest(request)) {
@@ -44,11 +45,14 @@ public class LoginPlugin extends BasePlugin {
     }
 
     private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) {
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+
         try {
-            userService.login(request.getParameter("login"), request.getParameter("password"))
-                    .ifPresent(user -> onLoginSuccess(request, response, user));
-        } catch (UserInputException exception) {
-            onLoginFail(response, exception.getErrorMessage().getMessage());
+            UserDTO userDTO = userService.login(login, password);
+            onLoginSuccess(request, response, userDTO);
+        } catch (UserInputException | UserNotFoundException e) {
+            onLoginFail(response, e.getErrorMessage().getMessage());
         }
     }
 

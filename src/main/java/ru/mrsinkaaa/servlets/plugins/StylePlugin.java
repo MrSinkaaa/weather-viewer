@@ -2,7 +2,6 @@ package ru.mrsinkaaa.servlets.plugins;
 
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.service.StyleService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;
@@ -11,7 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class StylePlugin implements ServletPlugin {
+public class StylePlugin extends BasePlugin {
 
     private final StyleService styleService = StyleService.getInstance();
 

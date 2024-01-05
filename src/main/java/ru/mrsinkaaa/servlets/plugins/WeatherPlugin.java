@@ -4,7 +4,6 @@ import lombok.extern.log4j.Log4j2;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.service.LocationService;
-import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.utils.PathUtil;
 
@@ -22,7 +21,6 @@ public class WeatherPlugin extends BasePlugin {
     private static final String WEATHER_TEMPLATE = "weather.html";
     private static final String ERROR_REDIRECT = "/weather?error";
 
-    private final SessionService sessionService = SessionService.getInstance();
     private final LocationService locationService = LocationService.getInstance();
     private final WeatherService weatherService = WeatherService.getInstance();
 

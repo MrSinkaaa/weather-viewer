@@ -1,16 +1,15 @@
 package ru.mrsinkaaa.servlets.plugins;
 
-import ru.mrsinkaaa.config.ThymeleafConfig;
-import ru.mrsinkaaa.servlets.ServletPlugin;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
-public class IndexPlugin implements ServletPlugin {
+
+public class IndexPlugin extends BasePlugin {
+
+    public static final String HEADER_TEMPLATE = "header.html";
 
     @Override
     public boolean canHandle(String path) {
@@ -20,8 +19,6 @@ public class IndexPlugin implements ServletPlugin {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
-
-        ThymeleafConfig.getTemplateEngine().process("header.html", webContext, response.getWriter());
-
+        renderPage(response, HEADER_TEMPLATE);
     }
 }
