@@ -25,7 +25,7 @@ public class UserService {
                                 .id(user.getId())
                                 .login(user.getLogin())
                                 .build())
-                .orElseThrow();
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public UserDTO findByLogin(String login) {
@@ -34,7 +34,7 @@ public class UserService {
                                 .id(user.getId())
                                 .login(user.getLogin())
                                 .build())
-                .orElseThrow();
+                .orElseThrow(UserNotFoundException::new);
     }
 
     public void save(UserDTO userDTO) {

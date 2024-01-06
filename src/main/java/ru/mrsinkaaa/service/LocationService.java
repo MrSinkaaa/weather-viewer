@@ -6,6 +6,7 @@ import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.entity.Location;
+import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
 import ru.mrsinkaaa.repository.LocationRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class LocationService {
     public LocationDTO findById(Integer id) {
         return locationRepository.findById(id)
                 .map(this::toLocationDTO)
-                .orElseThrow();
+                .orElseThrow(LocationNotFoundException::new);
     }
 
     public List<LocationDTO> findByUserId(Integer id) {
