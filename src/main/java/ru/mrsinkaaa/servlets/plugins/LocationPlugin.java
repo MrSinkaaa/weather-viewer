@@ -1,9 +1,10 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import ru.mrsinkaaa.dto.LocationDTO;
-import ru.mrsinkaaa.dto.UserDTO;
+import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.service.LocationService;
+import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.utils.PathUtil;
 
@@ -13,14 +14,15 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 public class LocationPlugin extends BasePlugin {
-    private static final String USER_ATTRIBUTE = "user";
 
     private static final LocationService locationService = LocationService.getInstance();
     private static final WeatherService weatherService = WeatherService.getInstance();
+    private static final SessionService sessionService = SessionService.getInstance();
 
     @Override
     public boolean canHandle(String path) {
@@ -29,9 +31,10 @@ public class LocationPlugin extends BasePlugin {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        Optional<SessionDTO> session = sessionService.getSession(request);
 
-        if (userAlreadyLoggedIn(request)) {
-            int userId = ((UserDTO) request.getAttribute(USER_ATTRIBUTE)).getId();
+        if (session.isPresent()) {
+            int userId = session.get().getUserId();
 
             if(request.getParameter("deleteLocation") != null) {
                 deleteLocation(request, userId);
