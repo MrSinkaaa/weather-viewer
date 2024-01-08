@@ -8,30 +8,28 @@
     <title>Weather Viewer</title>
 </head>
 <body>
-<nav class="container-fluid header">
-    <div class="row">
-        <div class="col-3 mt-2">
-            <img src="../images/logo.svg" th:src="@{/images/logo.svg}" width="32" height="32" alt/>
-            <a class="header-brand">Weather Viewer</a>
+<nav class="header">
+    <div class="header-logo">
+        <img src="../images/logo.svg" th:src="@{/images/logo.svg}" width="32" height="32" alt/>
+        <div class="header-brand">Weather Viewer</div>
+    </div>
+    <div th:unless="${user}">
+        <div class="d-flex justify-content-between">
+            <a class="me-2" th:href="@{/login}">
+                <button class="d-flex align-items-center justify-content-center button animated-button">Log In</button>
+            </a>
+            <a th:href="@{/registration}">
+                <button class="d-flex align-items-center justify-content-center button animated-button">Sign Up</button>
+            </a>
         </div>
-        <div class="col-2 offset-7 mt-2" th:unless="${user}">
-            <div class="d-flex justify-content-evenly">
-                <a th:href="@{/login}">
-                    <button class="d-flex align-items-center justify-content-center button animated-button">Log In</button>
-                </a>
-                <a th:href="@{/registration}">
-                    <button class="d-flex align-items-center justify-content-center button animated-button">Sign Up</button>
-                </a>
-            </div>
-        </div>
-        <div class="col-2 offset-7 mt-2" th:if="${user}">
-            <div class="d-flex justify-content-end">
-                <p class="me-3 mt-1 header-user" th:text="${user.login}">Admin</p>
-                <form class="d-flex justify-content-center text-center" action="/logout" method="post">
-                    <button class="d-flex align-items-center justify-content-center button animated-button">Logout
-                    </button>
-                </form>
-            </div>
+    </div>
+    <div th:if="${user}">
+        <div class="d-flex justify-content-end align-items-center">
+            <div class="me-3 mt-1 header-user" th:text="${user.login}">Admin</div>
+            <form class="mt-1 d-flex justify-content-center text-center" action="/logout" method="post">
+                <button class="d-flex align-items-center justify-content-center button animated-button">Logout
+                </button>
+            </form>
         </div>
     </div>
 </nav>
