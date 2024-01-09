@@ -12,7 +12,7 @@
     <h4 class="weather-card-header p-3">Saved Locations</h4>
     <div th:if="${savedLocations}">
         <div th:each="location : ${savedLocations}">
-            <div class="searched-card">
+            <div th:city="${location.city}" onclick="window.location.href='/weather?city=' + this.getAttribute('city')" class="searched-card">
                 <h3 th:text="${location.city}"></h3>
                 <div class="searched-icon-text">
                     <img th:src="${'../images/' + location.weatherCode.getIcon()}" alt="" width="80px" height="80px"/>
