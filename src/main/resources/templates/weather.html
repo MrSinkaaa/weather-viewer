@@ -28,13 +28,12 @@
                             <input type="hidden" name="latitude" th:value="${weather.latitude}"/>
                             <input type="hidden" name="longitude" th:value="${weather.longitude}"/>
                             <button class="btn-none">
-                                <img src="../images/add-btn.png" alt="" width="40" height="40"/>
+                                <img src="../images/add-btn.png" alt="" width="32" height="32"/>
                             </button>
                         </form>
                     </h2>
                     <h3 class="weather-temperature pb-4">
-                        <span th:text="${weather.temperature}"/>
-                        &deg;C
+                        <span th:text="${weather.temperature} + '&deg;C'"/>
                     </h3>
                 </div>
                 <img th:src="${'../images/' + weather.weatherCode.getIcon()}" alt="" width="240px" height="240px"/>
