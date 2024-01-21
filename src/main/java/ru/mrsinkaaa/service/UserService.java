@@ -7,6 +7,7 @@ import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
 import ru.mrsinkaaa.exceptions.ErrorMessage;
+import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
 import ru.mrsinkaaa.exceptions.user.UserInputException;
 import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
 import ru.mrsinkaaa.repository.UserRepository;
@@ -43,10 +44,14 @@ public class UserService {
                 .password(userDTO.getPassword())
                 .build();
 
+        if(userRepository.findByLogin(userDTO.getLogin()).isPresent()) {
+            throw new UserAlreadyExistsException();
+        }
+
         userRepository.save(user);
     }
 
-    public void register(String login, String password) {
+    public void register(String login, String password) throws UserAlreadyExistsException {
         if (isValidCredentials(login, password)) {
             String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
 

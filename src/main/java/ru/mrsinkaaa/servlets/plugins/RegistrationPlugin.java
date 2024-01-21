@@ -1,6 +1,7 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import lombok.extern.log4j.Log4j2;
+import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
 import ru.mrsinkaaa.exceptions.user.UserInputException;
 import ru.mrsinkaaa.service.UserService;
 import ru.mrsinkaaa.utils.PathUtil;
@@ -45,9 +46,9 @@ public class RegistrationPlugin extends BasePlugin {
         try {
             userService.register(login, password);
             response.sendRedirect(PathUtil.LOGIN);
-        } catch (UserInputException exception) {
-            log.warn(exception.getErrorMessage().getMessage());
-            response.sendRedirect(REGISTRATION_ERROR + exception.getErrorMessage().getMessage());
+        } catch (UserInputException | UserAlreadyExistsException e) {
+            log.warn(e.getErrorMessage().getMessage());
+            response.sendRedirect(REGISTRATION_ERROR + e.getErrorMessage().getMessage());
         }
     }
 
