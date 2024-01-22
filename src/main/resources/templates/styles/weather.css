@@ -161,3 +161,12 @@
     border: none;
     background: none;
 }
+
+.card-error {
+    color: red;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 16px;
+    font-family: "Source Code Pro", cursive;
+    margin: 10px 0;
+}

@@ -11,7 +11,9 @@ import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.WeatherCode;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.exceptions.api.APIResponseException;
+import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -26,9 +28,7 @@ public class WeatherService {
     private static final WeatherService INSTANCE = new WeatherService();
     private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
 
-
-    @SneakyThrows
-    public WeatherDTO getWeather(String city) {
+    public WeatherDTO getWeather(String city) throws APIResponseException, LocationNotFoundException {
         String url = AppConfig.getProperty("api.url.city")
                 .formatted(city, AppConfig.getProperty("api.key"));
 
@@ -43,7 +43,7 @@ public class WeatherService {
         return processWeatherApiResponse(url);
     }
 
-    private WeatherDTO processWeatherApiResponse(String url) throws IOException {
+    private WeatherDTO processWeatherApiResponse(String url) {
         try {
             String resp = weatherAPI.sendGetRequest(url);
             log.debug("Response from weatherAPI: {}", resp);
@@ -52,6 +52,9 @@ public class WeatherService {
             JsonNode jsonWeather = mapper.readTree(resp);
 
             return parseJsonToDTO(jsonWeather);
+        } catch (FileNotFoundException e) {
+            log.error(e.getMessage(), e);
+            throw new LocationNotFoundException();
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new APIResponseException();

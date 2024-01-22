@@ -18,6 +18,9 @@
                         <input class="weather-input" name="city" type="search" placeholder="Search for a location"/>
                     </label>
                 </form>
+                <div th:if="${#request.getParameter('error') != null}">
+                    <div th:text="${#request.getParameter('error')}" class="card-error"></div>
+                </div>
             </div>
             <div class="d-flex justify-content-between weather-info">
                 <div class="d-flex flex-column justify-content-between ms-5 mt-4">
