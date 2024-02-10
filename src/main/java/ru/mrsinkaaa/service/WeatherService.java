@@ -1,5 +1,6 @@
 package ru.mrsinkaaa.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
@@ -62,28 +63,9 @@ public class WeatherService {
     }
 
     private static WeatherDTO parseJsonToDTO(JsonNode jsonWeather) {
-        int timeZone = jsonWeather.get("timezone").asInt();
-
-        return WeatherDTO.builder()
-                .longitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lon").asDouble()))
-                .latitude(BigDecimal.valueOf(jsonWeather.get("coord").get("lat").asDouble()))
-
-                .city(jsonWeather.get("name").asText())
-                .weatherCode(getIcon(jsonWeather.get("weather").get(0).get("main").asText()))
-
-                .sunrise(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunrise").asLong(), timeZone))
-                .sunset(parseUTCtoLocalDateTime(jsonWeather.get("sys").get("sunset").asLong(), timeZone))
-
-                .temperature(jsonWeather.get("main").get("temp").asInt())
-                .feelsLike(jsonWeather.get("main").get("feels_like").asInt())
-                .humidity(Double.valueOf(jsonWeather.get("main").get("humidity").asText()))
-                .pressure(Double.valueOf(jsonWeather.get("main").get("pressure").asText()))
-                .windSpeed(Double.valueOf(jsonWeather.get("wind").get("speed").asText()))
-                .build();
-    }
-
-    private static WeatherCode getIcon(String value) {
-        return WeatherCode.valueOf(value.toUpperCase());
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return mapper.convertValue(jsonWeather, WeatherDTO.class);
     }
 
 
