@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Log4j2
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-
 public class UserRepository implements CrudRepository<Integer, User> {
 
-    private static final UserRepository INSTANCE = new UserRepository();
-    private final SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
+    private final SessionFactory sessionFactory;
+
+    public UserRepository() {
+        this.sessionFactory = HibernateConfig.getSessionFactory();
+    }
 
     @Override
     public Optional<User> findById(Integer id) {
@@ -95,7 +96,4 @@ public class UserRepository implements CrudRepository<Integer, User> {
         }
     }
 
-    public static UserRepository getInstance() {
-        return INSTANCE;
-    }
 }

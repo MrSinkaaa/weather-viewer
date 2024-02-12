@@ -1,8 +1,11 @@
 package ru.mrsinkaaa.servlets.plugins;
 
+import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
+import ru.mrsinkaaa.repository.LocationRepository;
+import ru.mrsinkaaa.repository.SessionRepository;
 import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.WeatherService;
@@ -20,9 +23,15 @@ import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 public class LocationPlugin extends BasePlugin {
 
-    private static final LocationService locationService = LocationService.getInstance();
-    private static final WeatherService weatherService = WeatherService.getInstance();
-    private static final SessionService sessionService = SessionService.getInstance();
+    private LocationService locationService;
+    private WeatherService weatherService;
+
+    @Override
+    public void init() {
+        super.init();
+        locationService = new LocationService(new LocationRepository());
+        weatherService = new WeatherService(new WeatherAPI());
+    }
 
     @Override
     public boolean canHandle(String path) {
@@ -77,7 +86,7 @@ public class LocationPlugin extends BasePlugin {
     }
 
 
-    private static void getLocationByUser(int id) {
+    private void getLocationByUser(int id) {
         List<WeatherDTO> savedLocations = locationService.findByUserId(id)
                 .stream().map(location ->
                         weatherService.getWeather(location.getName()))

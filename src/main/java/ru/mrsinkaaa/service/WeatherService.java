@@ -23,11 +23,14 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WeatherService {
 
-    private static final WeatherService INSTANCE = new WeatherService();
-    private final WeatherAPI weatherAPI = WeatherAPI.getInstance();
+    private final WeatherAPI weatherAPI;
+
+    public WeatherService(WeatherAPI weatherAPI) {
+        this.weatherAPI = weatherAPI;
+    }
+
 
     public WeatherDTO getWeather(String city) throws APIResponseException, LocationNotFoundException {
         String url = AppConfig.getProperty("api.url.city")
@@ -77,7 +80,4 @@ public class WeatherService {
         return LocalDateTime.ofInstant(instant, zoneOffset).format(formatter);
     }
 
-    public static WeatherService getInstance() {
-        return INSTANCE;
-    }
 }

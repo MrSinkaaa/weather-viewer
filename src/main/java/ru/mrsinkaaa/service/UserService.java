@@ -14,11 +14,13 @@ import ru.mrsinkaaa.repository.UserRepository;
 
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserService {
 
-    private static final UserService INSTANCE = new UserService();
-    private final UserRepository userRepository = UserRepository.getInstance();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserDTO findById(Integer id) {
         return userRepository.findById(id).map(user ->
@@ -87,7 +89,4 @@ public class UserService {
         return true;
     }
 
-    public static UserService getInstance() {
-        return INSTANCE;
-    }
 }

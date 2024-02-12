@@ -1,10 +1,12 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import lombok.extern.log4j.Log4j2;
+import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.exceptions.api.APIResponseException;
 import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
+import ru.mrsinkaaa.repository.LocationRepository;
 import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.utils.PathUtil;
@@ -23,8 +25,14 @@ public class WeatherPlugin extends BasePlugin {
     private static final String WEATHER_TEMPLATE = "weather.html";
     private static final String ERROR_REDIRECT = "/weather?error=";
 
-    private final LocationService locationService = LocationService.getInstance();
-    private final WeatherService weatherService = WeatherService.getInstance();
+    private LocationService locationService;
+    private WeatherService weatherService;
+
+    @Override
+    public void init() {
+        this.locationService = new LocationService(new LocationRepository());
+        this.weatherService = new WeatherService(new WeatherAPI());
+    }
 
     @Override
     public boolean canHandle(String path) {

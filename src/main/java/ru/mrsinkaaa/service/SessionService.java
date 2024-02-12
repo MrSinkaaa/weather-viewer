@@ -19,12 +19,14 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionService {
 
-    private static final SessionService INSTANCE = new SessionService();
-    private final SessionRepository sessionRepository = SessionRepository.getInstance();
+    private final SessionRepository sessionRepository;
     private final ModelMapper mapper = new ModelMapper();
+
+    public SessionService(SessionRepository sessionRepository) {
+        this.sessionRepository = sessionRepository;
+    }
 
     public UUID createSession(UserDTO userDTO) {
         long expiresAt = Long.parseLong(AppConfig.getProperty("session.expiresAt"));
@@ -77,7 +79,4 @@ public class SessionService {
         return mapper.map(session, SessionDTO.class);
     }
 
-    public static SessionService getInstance() {
-        return INSTANCE;
-    }
 }

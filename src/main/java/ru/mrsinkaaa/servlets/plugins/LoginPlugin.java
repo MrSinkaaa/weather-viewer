@@ -22,9 +22,6 @@ public class LoginPlugin extends BasePlugin {
     private static final String USER_ATTRIBUTE = "user";
     private static final String LOGIN_ERROR = "/login?error=";
 
-    private static final UserService userService = UserService.getInstance();
-    private static final SessionService sessionService = SessionService.getInstance();
-
     @Override
     public boolean canHandle(String path) {
         return path.startsWith(PathUtil.LOGIN);

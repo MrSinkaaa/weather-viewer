@@ -1,6 +1,5 @@
 package ru.mrsinkaaa.service;
 
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.config.AppConfig;
@@ -10,16 +9,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor()
 public class ImageService {
 
-    private static final ImageService INSTANCE = new ImageService();
-
     private final String basePath = AppConfig.getProperty("image.base.url");
-
-    public static ImageService getInstance() {
-        return INSTANCE;
-    }
 
     @SneakyThrows
     public Optional<InputStream> get(String imagePath) {

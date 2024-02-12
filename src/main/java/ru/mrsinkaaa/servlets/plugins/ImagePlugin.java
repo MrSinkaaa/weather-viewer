@@ -12,8 +12,12 @@ import java.io.InputStream;
 
 public class ImagePlugin extends BasePlugin {
 
-    private final ImageService imageService = ImageService.getInstance();
+    private ImageService imageService;
 
+    @Override
+    public void init() {
+        this.imageService = new ImageService();
+    }
 
     @Override
     public boolean canHandle(String path) {

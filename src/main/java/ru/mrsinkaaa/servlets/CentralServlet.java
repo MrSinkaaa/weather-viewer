@@ -42,6 +42,7 @@ public class CentralServlet extends HttpServlet {
         try {
             for(ServletPlugin plugin : plugins) {
                 if(plugin.canHandle(path)) {
+                    plugin.init();
                     plugin.handle(request, response);
                     return;
                 }

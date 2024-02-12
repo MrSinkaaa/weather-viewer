@@ -1,7 +1,10 @@
 package ru.mrsinkaaa.servlets.plugins;
 
 import ru.mrsinkaaa.config.ThymeleafConfig;
+import ru.mrsinkaaa.repository.SessionRepository;
+import ru.mrsinkaaa.repository.UserRepository;
 import ru.mrsinkaaa.service.SessionService;
+import ru.mrsinkaaa.service.UserService;
 import ru.mrsinkaaa.servlets.ServletPlugin;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +15,19 @@ import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
 
 public abstract class BasePlugin implements ServletPlugin {
 
-    private static final SessionService sessionService = SessionService.getInstance();
+
+    protected static SessionRepository sessionRepository;
+    protected static SessionService sessionService;
+    protected static UserRepository userRepository;
+    protected static UserService userService;
+
+    public void init() {
+        userRepository = new UserRepository();
+        sessionRepository = new SessionRepository();
+
+        userService = new UserService(userRepository);
+        sessionService = new SessionService(sessionRepository);
+    }
 
     boolean userAlreadyLoggedIn(HttpServletRequest request) {
         return sessionService.getSession(request).isPresent();

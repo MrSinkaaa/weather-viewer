@@ -10,10 +10,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+
+@NoArgsConstructor
 public class StyleService {
 
-    private static final StyleService INSTANCE = new StyleService();
 
     private final String basePath = AppConfig.getProperty("style.base.url");
 
@@ -26,7 +26,4 @@ public class StyleService {
                 : Optional.empty();
     }
 
-    public static StyleService getInstance() {
-        return INSTANCE;
-    }
 }

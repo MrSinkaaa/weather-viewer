@@ -17,8 +17,6 @@ public class RegistrationPlugin extends BasePlugin {
     private static final String REGISTRATION_TEMPLATE = "authorization.html";
     private static final String REGISTRATION_ERROR = "/registration?error=";
 
-    private static final UserService userService = UserService.getInstance();
-
     @Override
     public boolean canHandle(String path) {
         return path.startsWith(PathUtil.REGISTRATION);

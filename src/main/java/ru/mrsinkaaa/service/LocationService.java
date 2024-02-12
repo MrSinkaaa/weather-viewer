@@ -13,12 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Log4j2
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class LocationService {
 
-    private static final LocationService INSTANCE = new LocationService();
-    private final LocationRepository locationRepository = LocationRepository.getInstance();
+    private final LocationRepository locationRepository;
     private final ModelMapper mapper = new ModelMapper();
+
+    public LocationService(LocationRepository locationRepository) {
+        this.locationRepository = locationRepository;
+    }
 
     public LocationDTO findById(Integer id) {
         return locationRepository.findById(id)
@@ -81,7 +83,4 @@ public class LocationService {
         return mapper.map(locationDTO, Location.class);
     }
 
-    public static LocationService getInstance() {
-        return INSTANCE;
-    }
 }

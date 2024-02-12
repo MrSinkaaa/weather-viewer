@@ -9,10 +9,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor()
 public class WeatherAPI {
-
-    private static final WeatherAPI INSTANCE = new WeatherAPI();
 
     public String sendGetRequest(String apiURL) throws IOException {
 
@@ -34,7 +32,4 @@ public class WeatherAPI {
         return response.toString();
     }
 
-    public static WeatherAPI getInstance() {
-        return INSTANCE;
-    }
 }

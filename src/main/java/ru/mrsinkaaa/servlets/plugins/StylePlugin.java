@@ -12,7 +12,12 @@ import java.io.InputStream;
 
 public class StylePlugin extends BasePlugin {
 
-    private final StyleService styleService = StyleService.getInstance();
+    private StyleService styleService;
+
+    @Override
+    public void init() {
+        styleService = new StyleService();
+    }
 
     @Override
     public boolean canHandle(String path) {

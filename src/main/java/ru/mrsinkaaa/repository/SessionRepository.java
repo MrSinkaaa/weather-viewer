@@ -12,11 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Log4j2
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SessionRepository implements CrudRepository<String, Session> {
 
-    private static final SessionRepository INSTANCE = new SessionRepository();
-    private final SessionFactory sessionFactory = HibernateConfig.getSessionFactory();
+    private final SessionFactory sessionFactory;
+
+    public SessionRepository() {
+        this.sessionFactory = HibernateConfig.getSessionFactory();
+    }
 
     @Override
     public Optional<Session> findById(String id) {
@@ -86,7 +88,4 @@ public class SessionRepository implements CrudRepository<String, Session> {
         }
     }
 
-    public static SessionRepository getInstance() {
-        return INSTANCE;
-    }
 }
