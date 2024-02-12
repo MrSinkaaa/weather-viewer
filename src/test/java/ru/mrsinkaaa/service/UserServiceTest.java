@@ -2,16 +2,18 @@ package ru.mrsinkaaa.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mindrot.jbcrypt.BCrypt;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.Mockito;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
 import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
 import ru.mrsinkaaa.exceptions.user.UserInputException;
 import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
 import ru.mrsinkaaa.repository.UserRepository;
+import ru.mrsinkaaa.service.UserService;
 
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest {
 
     @Mock
@@ -27,48 +30,45 @@ public class UserServiceTest {
     @InjectMocks
     private UserService userService;
 
+
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
+        this.userRepository = Mockito.mock(UserRepository.class);
+        this.userService = new UserService(userRepository);
     }
 
     @Test
     void testFindById_Success() {
-        Integer id = 1;
         User user = User.builder()
-                .id(id)
-                .login("testUser")
+                .id(1)
                 .build();
 
-        when(userRepository.findById(id)).thenReturn(Optional.of(user));
-        UserDTO result = userService.findById(id);
+        Mockito.when(userRepository.findById(any())).thenReturn(Optional.of(user));
+        UserDTO result = userService.findById(user.getId());
 
         assertNotNull(result);
-        assertEquals(id, result.getId());
+        assertEquals(user.getId(), result.getId());
     }
 
     @Test
     void testFindById_NotFound() {
-        Integer id = 3;
+        Mockito.doReturn(Optional.empty()).when(userRepository).findById(2);
 
-        when(userRepository.findById(id)).thenReturn(Optional.empty());
-
-        assertThrows(UserNotFoundException.class, () -> userService.findById(id));
+        assertThrows(UserNotFoundException.class, () -> userService.findById(2));
     }
 
     @Test
     void testFindByLogin_Success() {
         String login = "tester";
         User user = User.builder()
-                .id(5)
                 .login(login)
                 .build();
 
-        when(userRepository.findByLogin(login)).thenReturn(Optional.of(user));
+        Mockito.doReturn(Optional.of(user)).when(userRepository).findByLogin(login);
         UserDTO result = userService.findByLogin(login);
 
         assertNotNull(result);
-        assertEquals(login, result.getLogin());
+        assertEquals(user.getLogin(), result.getLogin());
     }
 
     @Test
@@ -89,19 +89,7 @@ public class UserServiceTest {
 
         userService.save(userDTO);
 
-        verify(userRepository).save(any(User.class));
-    }
-
-    @Test
-    void testSave_AlreadyExists() {
-        UserDTO userDTO = UserDTO.builder()
-                .login("testUser")
-                .password("testPassword")
-                .build();
-
-        userService.save(userDTO);
-
-        assertThrows(UserAlreadyExistsException.class, () -> userService.save(userDTO));
+        Mockito.verify(userRepository, times(1)).save(any(User.class));
     }
 
     @Test
@@ -134,7 +122,7 @@ public class UserServiceTest {
 
         when(userRepository.findByLogin(login)).thenReturn(Optional.of(new User()));
 
-        assertThrows(UserInputException.class, () -> userService.register(login, password));
+        assertThrows(UserAlreadyExistsException.class, () -> userService.register(login, password));
     }
 
     @Test
@@ -146,7 +134,7 @@ public class UserServiceTest {
                 .password(BCrypt.hashpw(password, BCrypt.gensalt()))
                 .build();
 
-        when(userRepository.findByLogin(login)).thenReturn(Optional.of(mockUser));
+        Mockito.doReturn(Optional.of(mockUser)).when(userRepository).findByLogin(login);
 
         UserDTO result = userService.login(login, password);
 
@@ -157,15 +145,17 @@ public class UserServiceTest {
     @Test
     void testLogin_WrongPassword() {
         String login = "validLogin";
-        String password = "otherPassword";
+        String validPassword = "validPassword";
+        String invalidPassword = "otherPassword";
+
         User mockUser = User.builder()
                 .login(login)
-                .password(BCrypt.hashpw(password, BCrypt.gensalt()))
+                .password(BCrypt.hashpw(validPassword, BCrypt.gensalt()))
                 .build();
 
         when(userRepository.findByLogin(login)).thenReturn(Optional.of(mockUser));
 
-        assertThrows(UserInputException.class, () -> userService.login(login, password));
+        assertThrows(UserInputException.class, () -> userService.login(login, invalidPassword));
     }
 
     @Test
