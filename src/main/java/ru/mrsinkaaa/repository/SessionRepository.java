@@ -8,6 +8,7 @@ import org.hibernate.Transaction;
 import ru.mrsinkaaa.config.HibernateConfig;
 import ru.mrsinkaaa.entity.Session;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +32,12 @@ public class SessionRepository implements CrudRepository<String, Session> {
     public List<Session> findAll() {
         try (org.hibernate.Session session = sessionFactory.openSession()) {
             return session.createQuery("from Session", Session.class).getResultList();
+        }
+    }
+
+    public void deleteAllExpiredSessions() {
+        try(org.hibernate.Session session = sessionFactory.openSession()) {
+            session.createQuery("delete from Session where expiresAt < NOW()").executeUpdate();
         }
     }
 

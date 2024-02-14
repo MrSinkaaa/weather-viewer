@@ -15,6 +15,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +60,10 @@ public class SessionService {
         log.debug("Session or cookie not found");
 
         return Optional.empty();
+    }
+
+    public void deleteAllExpiredSessions() {
+        sessionRepository.deleteAllExpiredSessions();
     }
 
     private Optional<SessionDTO> getValidSession(Session session) {
