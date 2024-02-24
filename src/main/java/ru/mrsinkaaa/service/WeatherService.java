@@ -3,16 +3,13 @@ package ru.mrsinkaaa.service;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.config.AppConfig;
-import ru.mrsinkaaa.dto.WeatherCode;
 import ru.mrsinkaaa.dto.WeatherDTO;
-import ru.mrsinkaaa.exceptions.api.APIResponseException;
-import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
+import ru.mrsinkaaa.exception.api.APIResponseException;
+import ru.mrsinkaaa.exception.location.LocationNotFoundException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

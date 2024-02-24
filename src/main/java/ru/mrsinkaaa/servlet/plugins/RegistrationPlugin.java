@@ -1,9 +1,8 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import lombok.extern.log4j.Log4j2;
-import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
-import ru.mrsinkaaa.exceptions.user.UserInputException;
-import ru.mrsinkaaa.service.UserService;
+import ru.mrsinkaaa.exception.user.UserAlreadyExistsException;
+import ru.mrsinkaaa.exception.user.UserInputException;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;

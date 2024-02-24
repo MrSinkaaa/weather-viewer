@@ -1,4 +1,4 @@
-package ru.mrsinkaaa.exceptions;
+package ru.mrsinkaaa.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

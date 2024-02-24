@@ -1,13 +1,11 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.dto.SessionDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
 import ru.mrsinkaaa.repository.LocationRepository;
-import ru.mrsinkaaa.repository.SessionRepository;
 import ru.mrsinkaaa.service.LocationService;
-import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.WeatherService;
 import ru.mrsinkaaa.utils.PathUtil;
 
@@ -19,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+import static ru.mrsinkaaa.servlet.CentralServlet.webContext;
 
 public class LocationPlugin extends BasePlugin {
 

@@ -36,8 +36,19 @@ public class SessionRepository implements CrudRepository<String, Session> {
     }
 
     public void deleteAllExpiredSessions() {
+        LocalDateTime now = LocalDateTime.now();
+
         try(org.hibernate.Session session = sessionFactory.openSession()) {
-            session.createQuery("delete from Session where expiresAt < NOW()").executeUpdate();
+            session.beginTransaction();
+
+            int deletedSessions = session.createQuery("delete from Session where expiresAt < :now")
+                    .setParameter("now", now)
+                    .executeUpdate();
+
+            session.getTransaction().commit();
+            log.info(deletedSessions + " expired sessions were deleted");
+        } catch (Exception e) {
+            log.error("Error deleting expired sessions: " + e.getMessage());
         }
     }
 

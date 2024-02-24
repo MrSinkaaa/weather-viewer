@@ -1,12 +1,10 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import lombok.SneakyThrows;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.UserDTO;
-import ru.mrsinkaaa.exceptions.user.UserInputException;
-import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
-import ru.mrsinkaaa.service.SessionService;
-import ru.mrsinkaaa.service.UserService;
+import ru.mrsinkaaa.exception.user.UserInputException;
+import ru.mrsinkaaa.exception.user.UserNotFoundException;
 import ru.mrsinkaaa.utils.PathUtil;
 
 import javax.servlet.ServletException;

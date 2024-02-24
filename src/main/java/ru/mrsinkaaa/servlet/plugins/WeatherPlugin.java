@@ -1,11 +1,11 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import lombok.extern.log4j.Log4j2;
 import ru.mrsinkaaa.api.WeatherAPI;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.dto.WeatherDTO;
-import ru.mrsinkaaa.exceptions.api.APIResponseException;
-import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
+import ru.mrsinkaaa.exception.api.APIResponseException;
+import ru.mrsinkaaa.exception.location.LocationNotFoundException;
 import ru.mrsinkaaa.repository.LocationRepository;
 import ru.mrsinkaaa.service.LocationService;
 import ru.mrsinkaaa.service.WeatherService;
@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+import static ru.mrsinkaaa.servlet.CentralServlet.webContext;
 
 @Log4j2
 public class WeatherPlugin extends BasePlugin {

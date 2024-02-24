@@ -1,17 +1,17 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import ru.mrsinkaaa.config.ThymeleafConfig;
 import ru.mrsinkaaa.repository.SessionRepository;
 import ru.mrsinkaaa.repository.UserRepository;
 import ru.mrsinkaaa.service.SessionService;
 import ru.mrsinkaaa.service.UserService;
-import ru.mrsinkaaa.servlets.ServletPlugin;
+import ru.mrsinkaaa.servlet.ServletPlugin;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static ru.mrsinkaaa.servlets.CentralServlet.webContext;
+import static ru.mrsinkaaa.servlet.CentralServlet.webContext;
 
 public abstract class BasePlugin implements ServletPlugin {
 

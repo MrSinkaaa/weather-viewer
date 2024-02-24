@@ -1,18 +1,14 @@
 package ru.mrsinkaaa.service;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.mindrot.jbcrypt.BCrypt;
 import ru.mrsinkaaa.config.AppConfig;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
-import ru.mrsinkaaa.exceptions.ErrorMessage;
-import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
-import ru.mrsinkaaa.exceptions.user.UserInputException;
-import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
+import ru.mrsinkaaa.exception.ErrorMessage;
+import ru.mrsinkaaa.exception.user.UserAlreadyExistsException;
+import ru.mrsinkaaa.exception.user.UserInputException;
+import ru.mrsinkaaa.exception.user.UserNotFoundException;
 import ru.mrsinkaaa.repository.UserRepository;
-
-import java.util.Optional;
 
 public class UserService {
 

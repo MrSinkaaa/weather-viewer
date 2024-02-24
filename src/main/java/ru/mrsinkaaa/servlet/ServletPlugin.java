@@ -1,4 +1,4 @@
-package ru.mrsinkaaa.servlets;
+package ru.mrsinkaaa.servlet;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

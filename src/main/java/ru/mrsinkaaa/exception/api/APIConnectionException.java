@@ -1,7 +1,7 @@
-package ru.mrsinkaaa.exceptions.api;
+package ru.mrsinkaaa.exception.api;
 
-import ru.mrsinkaaa.exceptions.ApplicationException;
-import ru.mrsinkaaa.exceptions.ErrorMessage;
+import ru.mrsinkaaa.exception.ApplicationException;
+import ru.mrsinkaaa.exception.ErrorMessage;
 
 public class APIConnectionException extends ApplicationException {
 

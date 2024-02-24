@@ -9,11 +9,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import ru.mrsinkaaa.dto.UserDTO;
 import ru.mrsinkaaa.entity.User;
-import ru.mrsinkaaa.exceptions.user.UserAlreadyExistsException;
-import ru.mrsinkaaa.exceptions.user.UserInputException;
-import ru.mrsinkaaa.exceptions.user.UserNotFoundException;
+import ru.mrsinkaaa.exception.user.UserAlreadyExistsException;
+import ru.mrsinkaaa.exception.user.UserInputException;
+import ru.mrsinkaaa.exception.user.UserNotFoundException;
 import ru.mrsinkaaa.repository.UserRepository;
-import ru.mrsinkaaa.service.UserService;
 
 import java.util.Optional;
 

@@ -1,7 +1,7 @@
-package ru.mrsinkaaa.exceptions.user;
+package ru.mrsinkaaa.exception.user;
 
-import ru.mrsinkaaa.exceptions.ApplicationException;
-import ru.mrsinkaaa.exceptions.ErrorMessage;
+import ru.mrsinkaaa.exception.ApplicationException;
+import ru.mrsinkaaa.exception.ErrorMessage;
 
 public class UserNotFoundException extends ApplicationException {
 

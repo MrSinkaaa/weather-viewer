@@ -1,4 +1,4 @@
-package ru.mrsinkaaa.servlets.plugins;
+package ru.mrsinkaaa.servlet.plugins;
 
 import ru.mrsinkaaa.utils.PathUtil;
 

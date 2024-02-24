@@ -1,12 +1,10 @@
 package ru.mrsinkaaa.service;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import ru.mrsinkaaa.dto.LocationDTO;
 import ru.mrsinkaaa.entity.Location;
-import ru.mrsinkaaa.exceptions.location.LocationNotFoundException;
+import ru.mrsinkaaa.exception.location.LocationNotFoundException;
 import ru.mrsinkaaa.repository.LocationRepository;
 
 import java.util.List;

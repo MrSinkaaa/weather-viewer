@@ -1,7 +1,7 @@
-package ru.mrsinkaaa.exceptions.location;
+package ru.mrsinkaaa.exception.location;
 
-import ru.mrsinkaaa.exceptions.ApplicationException;
-import ru.mrsinkaaa.exceptions.ErrorMessage;
+import ru.mrsinkaaa.exception.ApplicationException;
+import ru.mrsinkaaa.exception.ErrorMessage;
 
 public class LocationNotFoundException extends ApplicationException {
 

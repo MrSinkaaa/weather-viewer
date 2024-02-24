@@ -1,7 +1,7 @@
-package ru.mrsinkaaa.servlets;
+package ru.mrsinkaaa.servlet;
 
 import org.thymeleaf.context.WebContext;
-import ru.mrsinkaaa.servlets.plugins.*;
+import ru.mrsinkaaa.servlet.plugins.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
