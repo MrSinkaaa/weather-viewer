@@ -64,13 +64,14 @@ public class WeatherPlugin extends BasePlugin {
         String city = request.getParameter("city");
         try {
             WeatherDTO weatherDTO = weatherService.getWeather(city);
-            List<WeatherDTO> savedLocations = getSavedLocations(user);
-
-            webContext.setVariable("savedLocations", savedLocations);
             webContext.setVariable("weather", weatherDTO);
         } catch (APIResponseException | LocationNotFoundException e) {
             log.error("Error processing weather request: {}", e.getMessage());
-            response.sendRedirect(ERROR_REDIRECT + e.getErrorMessage().getMessage());
+            webContext.setVariable("error", e.getErrorMessage().getMessage());
+
+        } finally {
+            List<WeatherDTO> savedLocations = getSavedLocations(user);
+            webContext.setVariable("savedLocations", savedLocations);
         }
     }
 
