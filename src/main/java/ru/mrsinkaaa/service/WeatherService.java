@@ -47,16 +47,18 @@ public class WeatherService {
     private WeatherDTO processWeatherApiResponse(String url) {
         try {
             String resp = weatherAPI.sendGetRequest(url);
+
+            if(resp == null) {
+                log.error("Response from weatherAPI is null");
+                throw new LocationNotFoundException();
+            }
             log.debug("Response from weatherAPI: {}", resp);
 
             ObjectMapper mapper = new ObjectMapper();
             JsonNode jsonWeather = mapper.readTree(resp);
 
             return parseJsonToDTO(jsonWeather);
-        } catch (FileNotFoundException e) {
-            log.error(e.getMessage(), e);
-            throw new LocationNotFoundException();
-        } catch (IOException e) {
+        }  catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new APIResponseException();
         }
@@ -66,15 +68,6 @@ public class WeatherService {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return mapper.convertValue(jsonWeather, WeatherDTO.class);
-    }
-
-
-    private static String parseUTCtoLocalDateTime(Long unixTimestamp, int timezone) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
-        Instant instant = Instant.ofEpochSecond(unixTimestamp);
-        ZoneOffset zoneOffset = ZoneOffset.ofTotalSeconds(timezone);
-
-        return LocalDateTime.ofInstant(instant, zoneOffset).format(formatter);
     }
 
 }
