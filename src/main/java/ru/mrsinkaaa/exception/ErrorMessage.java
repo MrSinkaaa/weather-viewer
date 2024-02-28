@@ -22,7 +22,7 @@ public enum ErrorMessage {
     LOCATION_NOT_FOUND("Location with this name not found", HttpServletResponse.SC_NOT_FOUND),
 
     API_CONNECTION_ERROR("API connection error", HttpServletResponse.SC_INTERNAL_SERVER_ERROR),
-    API_RESPONSE_ERROR("API response error", HttpServletResponse.SC_BAD_REQUEST);
+    API_RESPONSE_ERROR("API response error. Please contact support if the problem persists ", HttpServletResponse.SC_BAD_REQUEST);
 
     private final String message;
     private final int status;
